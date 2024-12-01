@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import "../style/home.sass";
 import ProgressBar from "./ProgressBar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import TextField from "@mui/material/TextField";
 
 // Light Theme for ProgressBar customization
 const lightTheme = createTheme({
@@ -40,8 +41,18 @@ function Home() {
         {/* Main Content */}
         <Col xs={12} md={9}>
           <div className="hap">
-            <section id="section1" className="section bg-primary">
+            <section
+              id="section1"
+              className="section bg-primary d-flex flex-column p-3"
+            >
               <Typography variant="h2">Section 1: Set Your Goal</Typography>
+              <TextField
+                sx={{ mt: 1, mr: 1 }}
+                label="Enter your text"
+                variant="outlined" // Can also use 'filled' or 'standard'
+                fullWidth // Optional, makes the text field take up full width
+                margin="normal" // Adds spacing around the text field
+              />
             </section>
             <section id="section2" className="section bg-secondary">
               <Typography variant="h2">Section 2: Add Criteria</Typography>
