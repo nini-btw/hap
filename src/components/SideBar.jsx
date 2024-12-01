@@ -148,7 +148,13 @@ export default function SideBar() {
         </Drawer>
 
         {/* Main Content */}
-        <Main open={open}>
+        <Main
+          open={open}
+          sx={{
+            paddingTop: 0,
+            margin: 0,
+          }}
+        >
           <DrawerHeader />
           <Home />
         </Main>

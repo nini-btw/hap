@@ -1,116 +1,62 @@
-import Button from "@mui/material/Button";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { Typography } from "@mui/material";
 import "../style/home.sass";
+import ProgressBar from "./ProgressBar";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+// Light Theme for ProgressBar customization
+const lightTheme = createTheme({
+  components: {
+    MuiStep: {
+      styleOverrides: {
+        root: {
+          "& .MuiStepLabel-root": {
+            color: "blue", // Change step label color
+          },
+          "&.Mui-completed": {
+            color: "green", // Completed step color
+          },
+        },
+      },
+    },
+  },
+});
 
 function Home() {
   return (
-    <>
-      <div className="hap">
-        <Typography variant="body2" color="textSecondary">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Sint
-          laudantium saepe, aut recusandae maxime doloremque mollitia repellat
-          nihil, libero cumque ullam officia cupiditate fuga dolorum adipisci
-          fugiat voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam. Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam. Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.Lorem
-          ipsum dolor sit amet consectetur adipisicing elit. Sint laudantium
-          saepe, aut recusandae maxime doloremque mollitia repellat nihil,
-          libero cumque ullam officia cupiditate fuga dolorum adipisci fugiat
-          voluptates aliquam quia! Lorem ipsum dolor sit amet consectetur
-          adipisicing elit. Asperiores beatae vel unde voluptatum nihil minus
-          dicta amet, earum, magnam fuga ducimus. Nihil cum hic consequatur,
-          voluptatum voluptatem natus ab blanditiis. Lorem ipsum dolor sit amet,
-          consectetur adipisicing elit. Ullam iste reiciendis laudantium nemo ea
-          placeat blanditiis aperiam soluta enim maxime dignissimos expedita
-          natus, consectetur quae incidunt eveniet quaerat quo magnam.
-        </Typography>
-        <Button variant="contained">Hello world</Button>;
-      </div>
-    </>
+    <Container fluid>
+      <Row>
+        {/* Sidebar */}
+        <Col xs={12} md={3}>
+          <div className="bar text-black">
+            <ThemeProvider theme={lightTheme}>
+              <ProgressBar />
+            </ThemeProvider>
+          </div>
+        </Col>
+
+        {/* Main Content */}
+        <Col xs={12} md={9}>
+          <div className="hap">
+            <section id="section1" className="section bg-primary">
+              <Typography variant="h2">Section 1: Set Your Goal</Typography>
+            </section>
+            <section id="section2" className="section bg-secondary">
+              <Typography variant="h2">Section 2: Add Criteria</Typography>
+            </section>
+            <section id="section3" className="section bg-danger">
+              <Typography variant="h2">Section 3: Enter Data</Typography>
+            </section>
+            <section id="section4" className="section bg-success">
+              <Typography variant="h2">Section 4: Result</Typography>
+            </section>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
+
 export default Home;
