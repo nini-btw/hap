@@ -20,16 +20,15 @@ import { save } from "../../rtk/slice/valueSlice";
 
 function ThirdStep() {
   const [rows, setRows] = useState([]);
-  const [newAlternative, setNewAlternative] = useState(""); // Changed from newCriteria to newAlternative
+  const [newAlternative, setNewAlternative] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const dispatch = useDispatch();
-  const inputRef = useRef(null); // To keep track of the input field reference
+  const inputRef = useRef(null);
 
   const handleAddRow = () => {
     if (newAlternative.trim()) {
       const tableContainer = document.querySelector("#table-container");
 
-      // Save the current scroll position before adding a new row
       const scrollPosition = tableContainer.scrollTop;
 
       if (editIndex !== null) {

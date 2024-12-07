@@ -9,6 +9,7 @@ import SecondStep from "./Steps/SecondStep";
 import ThirdStep from "./Steps/ThirdStep";
 import FourthStep from "./Steps/FourthStep";
 import FifthStep from "./Steps/FifthStep";
+import StepSix from "./Steps/StepSix";
 
 // Light Theme for ProgressBar customization
 const lightTheme = createTheme({
@@ -54,6 +55,7 @@ function Home() {
             <ThirdStep />
             <FourthStep />
             <FifthStep />
+            <StepSix />
           </div>
         </Col>
       </Row>
