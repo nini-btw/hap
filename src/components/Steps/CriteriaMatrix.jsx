@@ -23,8 +23,8 @@ import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
 import { saveMatrix } from "../../rtk/slice/matrixSlice"; // import the saveMatrix action
 
-function FourthStep() {
-  const criteria = useSelector((state) => state.value.tableData);
+function CriteriaMatrix() {
+  const criteria = useSelector((state) => state.value.criteria);
   const dispatch = useDispatch();
   const [matrix, setMatrix] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
@@ -255,4 +255,4 @@ function FourthStep() {
   );
 }
 
-export default FourthStep;
+export default CriteriaMatrix;

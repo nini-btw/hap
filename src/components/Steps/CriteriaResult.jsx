@@ -13,11 +13,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { calculateWeights } from "../../rtk/slice/matrixSlice";
 
-function StepSix() {
+function CriteriaResult() {
   const dispatch = useDispatch();
 
   // Get data from Redux store
-  const criteria = useSelector((state) => state.value.tableData);
+  const criteria = useSelector((state) => state.value.criteria);
   const matrix = useSelector((state) => state.matrix.matrix);
   const normalizedMatrix = useSelector(
     (state) => state.matrix.normalizedMatrix
@@ -154,4 +154,4 @@ function StepSix() {
   );
 }
 
-export default StepSix;
+export default CriteriaResult;

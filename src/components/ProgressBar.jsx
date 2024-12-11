@@ -1,146 +1,98 @@
-import React, { useRef } from "react";
+import * as React from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
-import StepContent from "@mui/material/StepContent";
-import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useSelector } from "react-redux";
+import Goal from "./Steps/Goal";
+import Criteria from "./Steps/Criteria";
+import CriteriaMatrix from "./Steps/CriteriaMatrix";
+import CriteriaResult from "./Steps/CriteriaResult";
+import Alternative from "./Steps/Alternative";
+import AlternativeMatrix from "./Steps/AlternativeMatrix";
 
-// Define the steps with their associated section IDs
 const steps = [
-  { label: "Step One", description: "Set Your Goal", id: "section1" },
-  {
-    label: "Step Two",
-    description: "Add Criteria and Alternatives",
-    id: "section2",
-  },
-  { label: "Step Three", description: "Enter Data", id: "section3" },
-  { label: "Final Step", description: "Result", id: "section4" },
+  { key: "goal", label: "Define Goal" },
+  { key: "criteria", label: "Set Criteria" },
+  { key: "alternative", label: "Add Alternatives" },
+  { key: "criteriaMatrix", label: "Criteria Matrix" },
+  { key: "criteriaResult", label: "Criteria Result" },
+  { key: "alternativeMatrix", label: "Alternative Matrix" },
+];
+
+const stepComponents = [
+  <Goal key="goal" />,
+  <Criteria key="criteria" />,
+  <Alternative key="alternative" />,
+  <CriteriaMatrix key="criteriaMatrix" />,
+  <CriteriaResult key="criteriaResult" />,
+  <AlternativeMatrix key="alternativeMatrix" />,
 ];
 
 export default function ProgressBar() {
   const [activeStep, setActiveStep] = React.useState(0);
-
-  // Create a reference for each section
-  const sectionRefs = {
-    section1: useRef(null),
-    section2: useRef(null),
-    section3: useRef(null),
-    section4: useRef(null),
-  };
-
-  // Function to scroll to a specific section
-  const scrollToSection = (sectionId) => {
-    if (sectionRefs[sectionId]?.current) {
-      sectionRefs[sectionId].current.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
+  const stepValidation = useSelector((state) => state.stepValidation);
 
   const handleNext = () => {
-    const nextStep = activeStep + 1;
-    setActiveStep(nextStep);
-    if (steps[nextStep]) scrollToSection(steps[nextStep].id);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    const previousStep = activeStep - 1;
-    setActiveStep(previousStep);
-    if (steps[previousStep]) scrollToSection(steps[previousStep].id);
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-    scrollToSection(steps[0].id);
-  };
+  const isStepValid = stepValidation[steps[activeStep].key];
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel>{step.label}</StepLabel>
-            <StepContent>
-              <Typography>{step.description}</Typography>
-              <Box sx={{ mb: 2 }}>
-                <Button
-                  variant="contained"
-                  onClick={handleNext}
-                  sx={{ mt: 1, mr: 1 }}
-                  disabled={index === steps.length - 1}
-                >
-                  {index === steps.length - 1 ? "Finish" : "Continue"}
-                </Button>
-                <Button
-                  disabled={index === 0}
-                  onClick={handleBack}
-                  sx={{ mt: 1, mr: 1 }}
-                >
-                  Back
-                </Button>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-
-      {activeStep === steps.length && (
-        <Box sx={{ p: 3 }}>
-          <Typography>All steps completed - you are finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
+    <Box sx={{ display: "flex", width: "100%" }}>
+      <Box
+        sx={{
+          width: 250,
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          pt: 2,
+          alignItems: "center",
+          justifyContent: "space-around",
+        }}
+      >
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((step) => (
+            <Step key={step.key}>
+              <StepLabel>{step.label}</StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            pt: 2,
+          }}
+        >
+          <Button
+            color="inherit"
+            disabled={activeStep === 0}
+            onClick={handleBack}
+            sx={{ mr: 1 }}
+          >
+            Back
+          </Button>
+          <Box sx={{ flex: "1 1 auto" }} />
+          <Button onClick={handleNext} disabled={!isStepValid}>
+            Next
           </Button>
         </Box>
-      )}
+      </Box>
 
-      {/* Invisible sections */}
-      <div
-        ref={sectionRefs.section1}
-        id="section1"
-        style={{
-          height: "100vh",
-          backgroundColor: "#f0f0f0",
-          visibility: "hidden", // Makes it invisible but still takes space
-        }}
+      <Box
+        sx={{ flexGrow: 1, padding: 0, height: "100vh", overflow: "hidden" }}
       >
-        <h2>Step 1: Set Your Goal</h2>
-      </div>
-      <div
-        ref={sectionRefs.section2}
-        id="section2"
-        style={{
-          height: "100vh",
-          backgroundColor: "#d0d0d0",
-          visibility: "hidden",
-        }}
-      >
-        <h2>Step 2: Add Criteria and Alternatives</h2>
-      </div>
-      <div
-        ref={sectionRefs.section3}
-        id="section3"
-        style={{
-          height: "100vh",
-          backgroundColor: "#b0b0b0",
-          visibility: "hidden",
-        }}
-      >
-        <h2>Step 3: Enter Data</h2>
-      </div>
-      <div
-        ref={sectionRefs.section4}
-        id="section4"
-        style={{
-          height: "100vh",
-          backgroundColor: "#909090",
-          visibility: "hidden",
-        }}
-      >
-        <h2>Final Step: Result</h2>
-      </div>
+        <Box sx={{ margin: 0 }}>{stepComponents[activeStep]}</Box>
+      </Box>
     </Box>
   );
 }

@@ -4,7 +4,8 @@ export const valueSlice = createSlice({
   name: "valueSlice",
   initialState: {
     goal: "", // To store the goal data
-    tableData: [], // To store the table data
+    criteria: [], // To store the table data
+    alternatives: [], // To store the Alternative
   },
   reducers: {
     save: (state, action) => {

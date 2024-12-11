@@ -17,18 +17,19 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
+import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
 
-function ThirdStep() {
+function Alternative() {
   const [rows, setRows] = useState([]);
   const [newAlternative, setNewAlternative] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const dispatch = useDispatch();
-  const inputRef = useRef(null);
+  const inputRef = useRef(null); // To keep track of the input field reference
 
+  // Handle adding new row or editing existing row
   const handleAddRow = () => {
     if (newAlternative.trim()) {
       const tableContainer = document.querySelector("#table-container");
-
       const scrollPosition = tableContainer.scrollTop;
 
       if (editIndex !== null) {
@@ -41,8 +42,6 @@ function ThirdStep() {
         setRows([...rows, newAlternative]);
       }
       setNewAlternative("");
-
-      // Restore the scroll position after updating rows
       setTimeout(() => {
         tableContainer.scrollTop = scrollPosition;
       }, 0);
@@ -52,23 +51,24 @@ function ThirdStep() {
     }
   };
 
+  // Remove row by index
   const handleRemoveRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
   };
 
+  // Edit row by index
   const handleEditRow = (index) => {
     setNewAlternative(rows[index]);
     setEditIndex(index);
   };
 
-  // Save table data to Redux store under "alternativesData" whenever it changes
+  // Save table data to Redux store whenever it changes
   useEffect(() => {
-    dispatch(
-      save({
-        alternativesData: rows, // Save the alternatives data under the "alternativesData" key
-      })
-    );
+    dispatch(save({ alternatives: rows }));
+
+    // Validate the step based on the number of rows
+    dispatch(setStepValid({ step: "alternative", valid: rows.length >= 2 }));
   }, [rows, dispatch]);
 
   // Handle Enter key press to submit the value
@@ -79,18 +79,23 @@ function ThirdStep() {
   };
 
   return (
-    <section id="section2" className="section bg-light d-flex flex-column p-3">
+    <section
+      id="section2"
+      className="section bg-light d-flex flex-column p-3 justify-content-start"
+    >
+      {/* Title at the top */}
       <Typography
         variant="h4"
         component="header"
-        sx={{ color: "black", mb: 2 }}
+        sx={{ color: "black", mb: 5, mt: 2 }}
         align="center"
       >
-        Section 3: Set Your Alternatives
+        Section 2: Set Your Alternative
       </Typography>
 
-      <div
-        style={{
+      {/* Input and button section */}
+      <Box
+        sx={{
           display: "flex",
           justifyContent: "center",
           gap: "1rem",
@@ -98,9 +103,9 @@ function ThirdStep() {
         }}
       >
         <TextField
-          label={editIndex !== null ? "Edit Alternative" : "Add Alternative"} // Changed label text
-          value={newAlternative} // Changed variable name
-          onChange={(e) => setNewAlternative(e.target.value)} // Changed variable name
+          label={editIndex !== null ? "Edit Criterion" : "Add Criterion"}
+          value={newAlternative}
+          onChange={(e) => setNewAlternative(e.target.value)}
           onKeyDown={handleKeyDown} // Handle Enter key
           variant="outlined"
           size="small"
@@ -127,8 +132,9 @@ function ThirdStep() {
         >
           {editIndex !== null ? "Update" : "Add"}
         </Button>
-      </div>
+      </Box>
 
+      {/* Table section */}
       <TableContainer
         id="table-container"
         component={Paper}
@@ -138,11 +144,21 @@ function ThirdStep() {
           boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
           maxWidth: "600px",
           margin: "0 auto",
+          paddingBottom: "0",
+          maxHeight: "400px", // Add a max height to make scrolling work
+          overflowY: "auto", // Enable vertical scrolling
         }}
       >
         <Table>
           <TableHead>
-            <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
+            <TableRow
+              sx={{
+                backgroundColor: "#e3f2fd",
+                position: "sticky",
+                top: 0, // Keep it at the top when scrolling
+                zIndex: 1, // Ensure the header stays above the table body
+              }}
+            >
               <TableCell sx={{ fontWeight: "bold", color: "#1976d2" }}>
                 Alternative
               </TableCell>
@@ -211,4 +227,4 @@ function ThirdStep() {
   );
 }
 
-export default ThirdStep;
+export default Alternative;

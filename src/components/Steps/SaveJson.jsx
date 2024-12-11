@@ -6,7 +6,8 @@ import Button from "@mui/material/Button";
 const exportToJson = (valueState, matrixState) => {
   const combinedData = {
     goal: valueState.goal,
-    tableData: valueState.tableData,
+    criteria: valueState.criteria,
+    alternatives: valueState.alternatives,
     matrix: matrixState,
   };
 
@@ -18,7 +19,7 @@ const exportToJson = (valueState, matrixState) => {
   link.click();
 };
 
-function FifthStep() {
+function SaveJson() {
   const dispatch = useDispatch();
 
   // Get the current state from both slices
@@ -49,4 +50,4 @@ function FifthStep() {
   );
 }
 
-export default FifthStep;
+export default SaveJson;

@@ -151,8 +151,8 @@ export default function SideBar() {
         <Main
           open={open}
           sx={{
-            paddingTop: 0,
-            margin: 0,
+            paddingTop: "0",
+            margin: "0",
           }}
         >
           <DrawerHeader />
