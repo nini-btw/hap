@@ -42,7 +42,7 @@ function CriteriaResult() {
         component="header"
         sx={{ color: "black", mb: 2 }}
       >
-        Section 6: RESULT
+        RESULT
       </Typography>
       <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
         {/* Display Normalized Matrix */}

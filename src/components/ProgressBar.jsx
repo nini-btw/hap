@@ -15,18 +15,18 @@ import AlternativeMatrix from "./Steps/AlternativeMatrix";
 const steps = [
   { key: "goal", label: "Define Goal" },
   { key: "criteria", label: "Set Criteria" },
-  { key: "alternative", label: "Add Alternatives" },
-  { key: "criteriaMatrix", label: "Criteria Matrix" },
+  { key: "criteriaMatrix", label: "Criteria Pairwise" },
   { key: "criteriaResult", label: "Criteria Result" },
-  { key: "alternativeMatrix", label: "Alternative Matrix" },
+  { key: "alternative", label: "Add Alternatives" },
+  { key: "alternativeMatrix", label: "Alternative Pairwise" },
 ];
 
 const stepComponents = [
   <Goal key="goal" />,
   <Criteria key="criteria" />,
-  <Alternative key="alternative" />,
   <CriteriaMatrix key="criteriaMatrix" />,
   <CriteriaResult key="criteriaResult" />,
+  <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
 ];
 
@@ -42,7 +42,12 @@ export default function ProgressBar() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+
   const isStepValid = stepValidation[steps[activeStep].key];
+  const isLastStep = activeStep === steps.length - 1;
 
   return (
     <Box sx={{ display: "flex", width: "100%" }}>
@@ -82,15 +87,17 @@ export default function ProgressBar() {
             Back
           </Button>
           <Box sx={{ flex: "1 1 auto" }} />
-          <Button onClick={handleNext} disabled={!isStepValid}>
-            Next
-          </Button>
+          {isLastStep ? (
+            <Button onClick={handleReset}>Reset</Button>
+          ) : (
+            <Button onClick={handleNext} disabled={!isStepValid}>
+              Next
+            </Button>
+          )}
         </Box>
       </Box>
 
-      <Box
-        sx={{ flexGrow: 1, padding: 0, height: "100vh", overflow: "hidden" }}
-      >
+      <Box className="matrixes" sx={{ flexGrow: 1, padding: 0 }}>
         <Box sx={{ margin: 0 }}>{stepComponents[activeStep]}</Box>
       </Box>
     </Box>

@@ -82,7 +82,7 @@ function AlternativeMatrix() {
         component="header"
         sx={{ color: "black", mb: 2 }}
       >
-        Alternative Matrix
+        Alternative Pairwise
       </Typography>
 
       {alternatives.length < 2 ? (
@@ -140,7 +140,8 @@ function AlternativeMatrix() {
                   variant="h5"
                   sx={{
                     color: "black",
-                    mb: 2,
+                    mb: 0,
+                    mt: 4,
                     textDecoration: "underline",
                     width: "100%",
                     textAlign: "left",
@@ -158,6 +159,7 @@ function AlternativeMatrix() {
                       boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
                       flexBasis: "75%", // Takes 3/4 of the width
                       marginRight: "16px", // Adds space between the table and instructions
+                      height: "100%",
                     }}
                   >
                     <Table>

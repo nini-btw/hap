@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
 
@@ -25,6 +25,16 @@ function Alternative() {
   const [editIndex, setEditIndex] = useState(null);
   const dispatch = useDispatch();
   const inputRef = useRef(null); // To keep track of the input field reference
+
+  // Get stored data from Redux
+  const storedAlternatives = useSelector((state) => state.value.alternatives);
+
+  // Load data from Redux when component mounts
+  useEffect(() => {
+    if (Array.isArray(storedAlternatives) && storedAlternatives.length > 0) {
+      setRows(storedAlternatives);
+    }
+  }, [storedAlternatives]);
 
   // Handle adding new row or editing existing row
   const handleAddRow = () => {
@@ -90,7 +100,7 @@ function Alternative() {
         sx={{ color: "black", mb: 5, mt: 2 }}
         align="center"
       >
-        Section 2: Set Your Alternative
+        Set Your Alternative
       </Typography>
 
       {/* Input and button section */}
@@ -103,7 +113,7 @@ function Alternative() {
         }}
       >
         <TextField
-          label={editIndex !== null ? "Edit Criterion" : "Add Criterion"}
+          label={editIndex !== null ? "Edit Alternative" : "Add Alternative"}
           value={newAlternative}
           onChange={(e) => setNewAlternative(e.target.value)}
           onKeyDown={handleKeyDown} // Handle Enter key

@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
 import { saveMatrix } from "../../rtk/slice/matrixSlice"; // import the saveMatrix action
+import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
 
 function CriteriaMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
@@ -78,9 +79,9 @@ function CriteriaMatrix() {
       <Typography
         variant="h4"
         component="header"
-        sx={{ color: "black", mb: 2 }}
+        sx={{ color: "black", mb: 5 }}
       >
-        Section 4: RESULT
+        CRITERIA PAIRWISE
       </Typography>
 
       {criteria.length < 2 ? (
@@ -100,6 +101,7 @@ function CriteriaMatrix() {
               boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
               flexBasis: "75%", // Takes 3/4 of the width
               marginRight: "16px", // Adds space between the table and instructions
+              height: "100%",
             }}
           >
             <Table>
@@ -245,6 +247,7 @@ function CriteriaMatrix() {
           onClick={() => {
             // Dispatch action to save the matrix to the Redux store
             dispatch(saveMatrix(matrix));
+            dispatch(setStepValid({ step: "criteriaMatrix", valid: true }));
           }}
           sx={{ textTransform: "none", padding: "10px 20px" }}
         >

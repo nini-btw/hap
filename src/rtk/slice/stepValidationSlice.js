@@ -4,6 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   goal: false, // track the validity of goal input
   criteria: false, // track the validity of criteria input
+  criteriaMatrix: false,
+  criteriaResult: true,
   alternative: false,
   // Add more steps as needed
 };

@@ -80,7 +80,7 @@ function Goal() {
         component="header"
         sx={{ color: "black", mb: 2 }}
       >
-        Section 1: Set Your Goal
+        Set Your Goal
       </Typography>
 
       {/* Goal input field */}

@@ -17,71 +17,61 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useDispatch, useSelector } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
-import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
+import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
-  const [rows, setRows] = useState([]);
-  const [newCriteria, setNewCriteria] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
+  const [rows, setRows] = useState([]); // Local state for rows
+  const [newCriteria, setNewCriteria] = useState(""); // Input field value
+  const [editIndex, setEditIndex] = useState(null); // Edit mode index
   const dispatch = useDispatch();
-  const inputRef = useRef(null); // To keep track of the input field reference
+  const inputRef = useRef(null); // Ref for input field
 
-  // Get the stored data from Redux
+  // Get stored data from Redux
   const storedCriteria = useSelector((state) => state.value.criteria);
 
-  // Use effect to load the stored criteria data from Redux into the component
+  // Load data from Redux when component mounts
   useEffect(() => {
-    if (storedCriteria) {
-      setRows(storedCriteria); // Load the stored criteria into the component state
+    if (Array.isArray(storedCriteria) && storedCriteria.length > 0) {
+      setRows(storedCriteria);
     }
   }, [storedCriteria]);
 
-  // Handle adding new row or editing existing row
+  // Update Redux state whenever rows change
+  useEffect(() => {
+    dispatch(save({ criteria: rows }));
+
+    // Validate the step
+    dispatch(setStepValid({ step: "criteria", valid: rows.length >= 2 }));
+  }, [rows, dispatch]);
+
   const handleAddRow = () => {
     if (newCriteria.trim()) {
-      const tableContainer = document.querySelector("#table-container");
-      const scrollPosition = tableContainer.scrollTop;
-
       if (editIndex !== null) {
+        // Update existing row
         const updatedRows = rows.map((row, index) =>
           index === editIndex ? newCriteria : row
         );
         setRows(updatedRows);
         setEditIndex(null);
       } else {
+        // Add new row
         setRows([...rows, newCriteria]);
       }
       setNewCriteria("");
-      setTimeout(() => {
-        tableContainer.scrollTop = scrollPosition;
-      }, 0);
-
-      // Refocus on the input field after adding an item
-      inputRef.current.focus();
+      inputRef.current.focus(); // Refocus input
     }
   };
 
-  // Remove row by index
   const handleRemoveRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
   };
 
-  // Edit row by index
   const handleEditRow = (index) => {
     setNewCriteria(rows[index]);
     setEditIndex(index);
   };
 
-  // Save table data to Redux store whenever it changes
-  useEffect(() => {
-    dispatch(save({ criteria: rows }));
-
-    // Validate the step based on the number of rows
-    dispatch(setStepValid({ step: "criteria", valid: rows.length >= 2 }));
-  }, [rows, dispatch]);
-
-  // Handle Enter key press to submit the value
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleAddRow();
@@ -93,17 +83,15 @@ function Criteria() {
       id="section2"
       className="section bg-light d-flex flex-column p-3 justify-content-start"
     >
-      {/* Title at the top */}
       <Typography
         variant="h4"
         component="header"
         sx={{ color: "black", mb: 5, mt: 2 }}
         align="center"
       >
-        Section 2: Set Your Criteria
+        Set Your Criteria
       </Typography>
 
-      {/* Input and button section */}
       <Box
         sx={{
           display: "flex",
@@ -116,21 +104,14 @@ function Criteria() {
           label={editIndex !== null ? "Edit Criterion" : "Add Criterion"}
           value={newCriteria}
           onChange={(e) => setNewCriteria(e.target.value)}
-          onKeyDown={handleKeyDown} // Handle Enter key
+          onKeyDown={handleKeyDown}
           variant="outlined"
           size="small"
           sx={{
             backgroundColor: "white",
             "& .MuiInputBase-input": { color: "black" },
-            "& .MuiInputLabel-root": { color: "gray" },
-            "& .MuiInputLabel-root.Mui-focused": { color: "#1976d2" },
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": { borderColor: "gray" },
-              "&:hover fieldset": { borderColor: "#1976d2" },
-              "&.Mui-focused fieldset": { borderColor: "#1976d2" },
-            },
           }}
-          inputRef={inputRef} // Set the reference to input
+          inputRef={inputRef}
         />
         <Button
           variant="contained"
@@ -144,7 +125,6 @@ function Criteria() {
         </Button>
       </Box>
 
-      {/* Table section */}
       <TableContainer
         id="table-container"
         component={Paper}
@@ -161,14 +141,7 @@ function Criteria() {
       >
         <Table>
           <TableHead>
-            <TableRow
-              sx={{
-                backgroundColor: "#e3f2fd",
-                position: "sticky",
-                top: 0, // Keep it at the top when scrolling
-                zIndex: 1, // Ensure the header stays above the table body
-              }}
-            >
+            <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
               <TableCell sx={{ fontWeight: "bold", color: "#1976d2" }}>
                 Criteria
               </TableCell>
@@ -196,14 +169,7 @@ function Criteria() {
               </TableRow>
             ) : (
               rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={
-                    index === rows.length - 1
-                      ? { "& td": { borderBottom: "none" } }
-                      : {}
-                  }
-                >
+                <TableRow key={index}>
                   <TableCell sx={{ color: "#424242" }}>{row}</TableCell>
                   <TableCell>
                     <Box
