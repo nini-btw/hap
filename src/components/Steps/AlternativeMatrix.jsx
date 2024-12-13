@@ -18,52 +18,99 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import { save } from "../../rtk/slice/alternativeMatrixSlice"; // Import the dedicated action
+import {
+  saveMatrix,
+  calculateNormalizedMatrices,
+  calculateAlternativeWeights,
+  calculateOverallPriorities,
+} from "../../rtk/slice/alternativeMatrixSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
 
 function AlternativeMatrix() {
+  const criteriaWeights = useSelector((state) => state.criteria.weights);
   const alternatives = useSelector((state) => state.value.alternatives);
   const criteria = useSelector((state) => state.value.criteria);
   const dispatch = useDispatch();
-  const [matrix, setMatrix] = useState([]);
+
+  const [matrices, setMatrices] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
+  const [currentCriterion, setCurrentCriterion] = useState(null);
   const [newValue, setNewValue] = useState(1);
-  // Initialize the matrix when alternatives change
+
   useEffect(() => {
-    if (alternatives.length >= 2) {
-      const newMatrix = alternatives.map(() =>
-        Array(alternatives.length).fill(1)
-      ); // Initialize matrix with '1'
-      setMatrix(newMatrix);
+    if (alternatives.length >= 2 && criteria.length > 0) {
+      // Default values for matrices
+      const predefinedMatrices = {
+        c1: [
+          [1, 1 / 3, 5],
+          [3, 1, 7],
+          [1 / 5, 1 / 7, 1],
+        ],
+        c2: [
+          [1, 5, 1 / 3],
+          [1 / 5, 1, 1 / 7],
+          [3, 7, 1],
+        ],
+        c3: [
+          [1, 1 / 3, 1 / 5],
+          [3, 1, 1],
+          [5, 3, 1],
+        ],
+      };
+
+      // Check if the criteria names match the predefined matrices
+      const initialMatrices = {};
+      criteria.forEach((criterion) => {
+        initialMatrices[criterion] =
+          predefinedMatrices[criterion] || // Use predefined values if available
+          alternatives.map(() => Array(alternatives.length).fill(1)); // Otherwise, fill with default ones
+      });
+
+      setMatrices(initialMatrices);
     }
   }, [alternatives, criteria]);
 
-  const handleCellClick = (row, col) => {
+  const handleCellClick = (criterion, row, col) => {
     if (row !== col) {
+      setCurrentCriterion(criterion);
       setCurrentCell({ row, col });
-      setNewValue(matrix[row][col]);
+      setNewValue(matrices[criterion][row][col]);
       setOpenDialog(true);
     }
   };
 
   const handleValueChange = (value) => {
-    const newMatrix = [...matrix];
+    const updatedMatrices = { ...matrices };
 
-    // Set the selected value in cell [row, col]
-    newMatrix[currentCell.row][currentCell.col] = value;
+    // Update the selected cell and its reciprocal
+    const matrix = updatedMatrices[currentCriterion];
+    matrix[currentCell.row][currentCell.col] = value;
+    matrix[currentCell.col][currentCell.row] = value !== 0 ? 1 / value : 0; // Handle reciprocal
 
-    // Update the reciprocal value in cell [col, row]
-    if (value !== 0) {
-      newMatrix[currentCell.col][currentCell.row] = 1 / value; // Reciprocal in [col, row]
-    } else {
-      newMatrix[currentCell.col][currentCell.row] = 0; // Handle zero case if needed
-    }
-
-    setMatrix(newMatrix);
+    updatedMatrices[currentCriterion] = matrix;
+    setMatrices(updatedMatrices);
     setOpenDialog(false);
+  };
+
+  const handleSaveMatrices = () => {
+    Object.keys(matrices).forEach((criterion) => {
+      dispatch(
+        saveMatrix({
+          criterion,
+          matrix: matrices[criterion],
+        })
+      );
+    });
+    dispatch(calculateNormalizedMatrices());
+
+    // Calculate alternative weights
+    dispatch(calculateAlternativeWeights());
+
+    // Calculate overall priorities
+    dispatch(calculateOverallPriorities(criteriaWeights));
   };
 
   const handleBlur = () => {
@@ -74,7 +121,6 @@ function AlternativeMatrix() {
 
   // List of reciprocal fractions
   const fractions = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2];
-
   return (
     <section id="section4" className="section bg-light d-flex flex-column p-3">
       <Typography
@@ -92,146 +138,106 @@ function AlternativeMatrix() {
           </Typography>
         </Box>
       ) : (
-        <>
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mb: 4 }}>
-            {/* <Box
-              sx={{
-                backgroundColor: "#626262", // Dark background color
-                color: "white", // White text color for contrast
-                borderRadius: "8px",
-                padding: "16px",
-                flexBasis: "25%", // Takes 1/4 of the width
-                boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-                textAlign: "left",
-                width: "100%",
-              }}
-            >
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 2,
+            mb: 4,
+            flexDirection: "column",
+            textAlign: "center",
+          }}
+        >
+          {criteria.map((criterion, index) => (
+            <div key={index}>
               <Typography
-                variant="h6"
-                className="mb-5"
-                sx={{ fontWeight: "bold" }}
+                variant="h5"
+                sx={{
+                  color: "black",
+                  mb: 2,
+                  mt: 5,
+                  textDecoration: "underline",
+                  width: "100%",
+                  textAlign: "left",
+                }}
               >
-                AHP Scale:
+                {criterion}
               </Typography>
-              <Typography
-                className="mb-3"
-                variant="body2"
-                sx={{ marginTop: "8px" }}
+              <TableContainer
+                component={Paper}
+                sx={{
+                  backgroundColor: "#f3f6f9",
+                  border: "1px solid #e0e0e0",
+                  boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
+                  flexBasis: "75%",
+                  marginRight: "16px",
+                }}
               >
-                <strong>1:</strong> Equal Importance
-              </Typography>
-              <Typography className="mb-3" variant="body2">
-                <strong>3:</strong> Moderate Importance
-              </Typography>
-              <Typography className="mb-3" variant="body2">
-                <strong>5:</strong> Strong Importance
-              </Typography>
-              <Typography className="mb-3" variant="body2">
-                <strong>7:</strong> Very Strong Importance
-              </Typography>
-              <Typography variant="body2">
-                <strong>9:</strong> Extreme Importance
-              </Typography>
-            </Box> */}
-            {criteria.map((criterion, index) => (
-              <>
-                <Typography
-                  key={index}
-                  variant="h5"
-                  sx={{
-                    color: "black",
-                    mb: 0,
-                    mt: 4,
-                    textDecoration: "underline",
-                    width: "100%",
-                    textAlign: "left",
-                  }}
-                >
-                  {criterion}
-                </Typography>
-                <Box sx={{ display: "flex", width: "100%" }}>
-                  {/* Table Container - takes 3/4 of the width */}
-                  <TableContainer
-                    component={Paper}
-                    sx={{
-                      backgroundColor: "#f3f6f9",
-                      border: "1px solid #e0e0e0",
-                      boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-                      flexBasis: "75%", // Takes 3/4 of the width
-                      marginRight: "16px", // Adds space between the table and instructions
-                      height: "100%",
-                    }}
-                  >
-                    <Table>
-                      <TableHead>
-                        <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
+                      <TableCell
+                        sx={{ fontWeight: "bold", color: "#1976d2" }}
+                      ></TableCell>
+                      {alternatives.map((alt, altIndex) => (
+                        <TableCell
+                          key={altIndex}
+                          sx={{ fontWeight: "bold", color: "#1976d2" }}
+                        >
+                          {alt}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {matrices[criterion]?.map((row, rowIndex) => (
+                      <TableRow key={rowIndex}>
+                        <TableCell
+                          sx={{ fontWeight: "bold", color: "#1976d2" }}
+                        >
+                          {alternatives[rowIndex]}
+                        </TableCell>
+                        {row.map((cellValue, colIndex) => (
                           <TableCell
-                            sx={{ fontWeight: "bold", color: "#1976d2" }}
-                          ></TableCell>
-                          {alternatives.map((criterion, index) => (
-                            <TableCell
-                              key={index}
-                              sx={{ fontWeight: "bold", color: "#1976d2" }}
-                            >
-                              {criterion}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {matrix.map((row, rowIndex) => (
-                          <TableRow key={rowIndex}>
-                            <TableCell
-                              sx={{ fontWeight: "bold", color: "#1976d2" }}
-                            >
-                              {alternatives[rowIndex]}
-                            </TableCell>
-                            {row.map((cellValue, colIndex) => (
-                              <TableCell
-                                key={colIndex}
-                                sx={{
-                                  color: "#424242",
-                                  cursor:
-                                    rowIndex !== colIndex
-                                      ? "pointer"
-                                      : "default",
-                                  backgroundColor:
-                                    rowIndex === colIndex ? "#e3f2fd" : "white",
-                                }}
-                                onClick={() =>
-                                  handleCellClick(rowIndex, colIndex)
-                                }
-                              >
-                                {rowIndex === colIndex ? (
-                                  "1"
-                                ) : (
-                                  <MathJax.Context>
-                                    <MathJax.Node>
-                                      {Number.isInteger(cellValue)
-                                        ? cellValue
-                                        : `\\frac{1}{${(1 / cellValue).toFixed(
-                                            0
-                                          )}}`}
-                                    </MathJax.Node>
-                                  </MathJax.Context>
-                                )}
-                              </TableCell>
-                            ))}
-                          </TableRow>
+                            key={colIndex}
+                            sx={{
+                              color: "#424242",
+                              cursor:
+                                rowIndex !== colIndex ? "pointer" : "default",
+                              backgroundColor:
+                                rowIndex === colIndex ? "#e3f2fd" : "white",
+                              textAlign: "center",
+                            }}
+                            onClick={() =>
+                              handleCellClick(criterion, rowIndex, colIndex)
+                            }
+                          >
+                            {rowIndex === colIndex ? (
+                              "1"
+                            ) : (
+                              <MathJax.Context>
+                                <MathJax.Node>
+                                  {Number.isInteger(cellValue)
+                                    ? cellValue
+                                    : `\\frac{1}{${(1 / cellValue).toFixed(
+                                        0
+                                      )}}`}
+                                </MathJax.Node>
+                              </MathJax.Context>
+                            )}
+                          </TableCell>
                         ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
-              </>
-            ))}
-          </Box>
-        </>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </div>
+          ))}
+        </Box>
       )}
 
-      {/* Dialog for selecting values */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
-        {/* Update the title to show the names of the row and column */}
         <DialogTitle>
           How much do you prefer{" "}
           <strong>{alternatives[currentCell.row]}</strong> compared to{" "}
@@ -271,18 +277,14 @@ function AlternativeMatrix() {
         </DialogActions>
       </Dialog>
 
-      {/* Save Matrix Button */}
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => {
-            // Dispatch action to save the matrix to the Redux store
-            dispatch(save(matrix));
-          }}
+          onClick={handleSaveMatrices}
           sx={{ textTransform: "none", padding: "10px 20px" }}
         >
-          Save Matrix
+          Save All Matrices
         </Button>
       </Box>
     </section>

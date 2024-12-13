@@ -26,8 +26,13 @@ import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming 
 
 function CriteriaMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
+  const storedCriteria = useSelector((state) => state.value.criteria.matrix);
   const dispatch = useDispatch();
-  const [matrix, setMatrix] = useState([]);
+  const [matrix, setMatrix] = useState([
+    [1, 3, 1 / 5],
+    [1 / 3, 1, 1 / 7],
+    [5, 7, 1],
+  ]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
   const [newValue, setNewValue] = useState(1);
@@ -35,10 +40,16 @@ function CriteriaMatrix() {
   // Initialize the matrix when criteria change
   useEffect(() => {
     if (criteria.length >= 2) {
-      const newMatrix = criteria.map(() => Array(criteria.length).fill(1)); // Initialize matrix with '1'
-      setMatrix(newMatrix);
+      if (storedCriteria && storedCriteria.length > 0) {
+        // If storedCriteria has data, use it
+        /* setMatrix(storedCriteria); */
+      } else {
+        // Otherwise, initialize matrix with default values (all 1s)
+        const newMatrix = criteria.map(() => Array(criteria.length).fill(1));
+        /* setMatrix(newMatrix); */
+      }
     }
-  }, [criteria]);
+  }, [criteria, storedCriteria]);
 
   const handleCellClick = (row, col) => {
     if (row !== col) {

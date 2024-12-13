@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const matrixSlice = createSlice({
-  name: "matrix",
+  name: "criteria",
   initialState: {
     matrix: [],
     normalizedMatrix: [],

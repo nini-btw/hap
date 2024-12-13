@@ -20,7 +20,7 @@ import { save } from "../../rtk/slice/valueSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
 
 function Alternative() {
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState(["a1", "a2", "a3"]);
   const [newAlternative, setNewAlternative] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const dispatch = useDispatch();

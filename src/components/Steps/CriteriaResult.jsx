@@ -18,13 +18,13 @@ function CriteriaResult() {
 
   // Get data from Redux store
   const criteria = useSelector((state) => state.value.criteria);
-  const matrix = useSelector((state) => state.matrix.matrix);
+  const matrix = useSelector((state) => state.criteria.matrix);
   const normalizedMatrix = useSelector(
-    (state) => state.matrix.normalizedMatrix
+    (state) => state.criteria.normalizedMatrix
   );
-  const weights = useSelector((state) => state.matrix.weights);
+  const weights = useSelector((state) => state.criteria.weights);
   const consistencyRatio = useSelector(
-    (state) => state.matrix.consistencyRatio
+    (state) => state.criteria.consistencyRatio
   );
 
   // Calculate weights and CR when the component loads

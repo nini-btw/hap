@@ -11,6 +11,7 @@ import CriteriaMatrix from "./Steps/CriteriaMatrix";
 import CriteriaResult from "./Steps/CriteriaResult";
 import Alternative from "./Steps/Alternative";
 import AlternativeMatrix from "./Steps/AlternativeMatrix";
+import AlternativeResult from "./Steps/AlternativeResult";
 
 const steps = [
   { key: "goal", label: "Define Goal" },
@@ -19,6 +20,7 @@ const steps = [
   { key: "criteriaResult", label: "Criteria Result" },
   { key: "alternative", label: "Add Alternatives" },
   { key: "alternativeMatrix", label: "Alternative Pairwise" },
+  { key: "alternativeResult", label: "Alternative Result" },
 ];
 
 const stepComponents = [
@@ -28,6 +30,7 @@ const stepComponents = [
   <CriteriaResult key="criteriaResult" />,
   <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
+  <AlternativeResult key="alternativeResult" />,
 ];
 
 export default function ProgressBar() {

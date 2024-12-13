@@ -7,7 +7,7 @@ import stepValidationReducer from "./slice/stepValidationSlice";
 export const store = configureStore({
   reducer: {
     value: valueReducer,
-    matrix: matrixReducer,
+    criteria: matrixReducer,
     alternatives: alternativeMatrixSlice,
     stepValidation: stepValidationReducer,
   },

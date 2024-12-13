@@ -24,7 +24,7 @@ const useDebounce = (value, delay) => {
 function Goal() {
   const dispatch = useDispatch();
   const { goal } = useSelector((state) => state.value);
-  const [goalValue, setGoalValue] = useState(goal);
+  const [goalValue, setGoalValue] = useState(goal || "car");
   const [isGoalConfirmed, setIsGoalConfirmed] = useState(false);
   const [error, setError] = useState("");
 
@@ -92,6 +92,7 @@ function Goal() {
         margin="normal"
         disabled={isGoalConfirmed} // Disable input after confirmation
         onKeyDown={handleKeyPress} // Add key press event handler
+        defaultValue={"car"}
         sx={{
           backgroundColor: "white",
           "& .MuiInputBase-input": {
