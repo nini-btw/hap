@@ -1,4 +1,5 @@
 import { Button, Typography, Box } from "@mui/material";
+import { Link } from "react-router-dom";
 
 function Landing() {
   return (
@@ -49,6 +50,8 @@ function Landing() {
         Welcome to Our AHP Application
       </Typography>
       <Button
+        component={Link}
+        to="/home"
         variant="contained"
         sx={{
           backgroundColor: "#1976d2",

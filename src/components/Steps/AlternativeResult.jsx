@@ -19,6 +19,7 @@ const AlternativeResult = () => {
 
   const criteria = useSelector((state) => state.value.criteria); // Array of criterion names
   const alternatives = useSelector((state) => state.value.alternatives); // Array of alternative names
+  console.log(a, n, w, p);
 
   return (
     <Box
@@ -66,10 +67,10 @@ const AlternativeResult = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             Weights for Criteria
           </Typography>
-          {Object.entries(w).map(([criteria, matrix], idx) => (
+          {criteria.map((criterion, idx) => (
             <Box key={idx} sx={{ mb: 2 }}>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                {criteria[idx]} {/* Match criterion name with index */}
+                {criterion}
               </Typography>
               <TableContainer component={Paper}>
                 <Table>
@@ -82,7 +83,7 @@ const AlternativeResult = () => {
                   </TableHead>
                   <TableBody>
                     <TableRow>
-                      {matrix.map((value, colIndex) => (
+                      {w[criterion]?.map((value, colIndex) => (
                         <TableCell key={colIndex}>{value.toFixed(3)}</TableCell>
                       ))}
                     </TableRow>
@@ -100,10 +101,10 @@ const AlternativeResult = () => {
           <Typography variant="h6" sx={{ mb: 2 }}>
             Normalized Matrices
           </Typography>
-          {Object.entries(n).map(([criteria, matrix], idx) => (
+          {criteria.map((criterion, idx) => (
             <Box key={idx} sx={{ mb: 2 }}>
               <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                {criteria[idx]} {/* Match criterion name with index */}
+                {criterion}
               </Typography>
               <TableContainer component={Paper}>
                 <Table>
@@ -115,7 +116,7 @@ const AlternativeResult = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {matrix.map((row, rowIndex) => (
+                    {n[criterion]?.map((row, rowIndex) => (
                       <TableRow key={rowIndex}>
                         {row.map((value, colIndex) => (
                           <TableCell key={colIndex}>

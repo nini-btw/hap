@@ -73,10 +73,9 @@ export const alternativeMatrixSlice = createSlice({
 
       // Determine the best alternative
       const maxPriority = Math.max(...state.overallPriorities);
-      state.bestAlternative =
-        state.overallPriorities.findIndex(
-          (priority) => priority === maxPriority
-        ) + 1;
+      state.bestAlternative = state.overallPriorities.findIndex(
+        (priority) => priority === maxPriority
+      );
     },
   },
 });
