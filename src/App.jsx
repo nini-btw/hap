@@ -1,12 +1,17 @@
 import "./App.css";
 import CssBaseline from "@mui/material/CssBaseline";
-import SideBar from "./components/SideBar";
+import Home from "./components/Home";
+import Landing from "./components/Landing";
+import { Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <>
       <CssBaseline enableColorScheme />
-      <SideBar />
+      <Routes>
+        <Route path="/" element={<Landing />}></Route>
+        <Route path="/Home" element={<Home />}></Route>
+      </Routes>
     </>
   );
 }
