@@ -24,7 +24,7 @@ const useDebounce = (value, delay) => {
 function Goal() {
   const dispatch = useDispatch();
   const { goal } = useSelector((state) => state.value);
-  const [goalValue, setGoalValue] = useState(goal || "car");
+  const [goalValue, setGoalValue] = useState(goal || "goal");
   const [isGoalConfirmed, setIsGoalConfirmed] = useState(false);
   const [error, setError] = useState("");
 

@@ -12,6 +12,8 @@ import CriteriaResult from "./Steps/CriteriaResult";
 import Alternative from "./Steps/Alternative";
 import AlternativeMatrix from "./Steps/AlternativeMatrix";
 import AlternativeResult from "./Steps/AlternativeResult";
+import HomeIcon from "@mui/icons-material/Home";
+import { Link } from "react-router-dom";
 
 const steps = [
   { key: "goal", label: "Define Goal" },
@@ -67,6 +69,18 @@ export default function ProgressBar() {
           justifyContent: "space-around",
         }}
       >
+        <Button
+          component={Link}
+          to="/"
+          variant="contained"
+          sx={{
+            scale: "150%",
+            zIndex: "2",
+            boxShadow: 0,
+          }}
+        >
+          <HomeIcon />
+        </Button>
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((step) => (
             <Step key={step.key}>

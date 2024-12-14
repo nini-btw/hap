@@ -2,11 +2,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  goal: true, // track the validity of goal input
-  criteria: true, // track the validity of criteria input
-  criteriaMatrix: true,
+  goal: false,
+  criteria: false,
+  criteriaMatrix: false,
   criteriaResult: true,
-  alternative: true,
+  alternative: false,
   alternativeMatrix: true,
 };
 

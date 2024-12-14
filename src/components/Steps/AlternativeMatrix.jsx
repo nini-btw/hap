@@ -43,30 +43,13 @@ function AlternativeMatrix() {
   useEffect(() => {
     if (alternatives.length >= 2 && criteria.length > 0) {
       // Default values for matrices
-      const predefinedMatrices = {
-        c1: [
-          [1, 1 / 3, 5],
-          [3, 1, 7],
-          [1 / 5, 1 / 7, 1],
-        ],
-        c2: [
-          [1, 5, 1 / 3],
-          [1 / 5, 1, 1 / 7],
-          [3, 7, 1],
-        ],
-        c3: [
-          [1, 1 / 3, 1 / 5],
-          [3, 1, 1],
-          [5, 3, 1],
-        ],
-      };
 
       // Check if the criteria names match the predefined matrices
       const initialMatrices = {};
       criteria.forEach((criterion) => {
-        initialMatrices[criterion] =
-          predefinedMatrices[criterion] || // Use predefined values if available
-          alternatives.map(() => Array(alternatives.length).fill(1)); // Otherwise, fill with default ones
+        initialMatrices[criterion] = alternatives.map(() =>
+          Array(alternatives.length).fill(1)
+        ); // Otherwise, fill with default ones
       });
 
       setMatrices(initialMatrices);
@@ -171,6 +154,7 @@ function AlternativeMatrix() {
                   boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
                   flexBasis: "75%",
                   marginRight: "16px",
+                  width: "60vw",
                 }}
               >
                 <Table>
@@ -266,6 +250,53 @@ function AlternativeMatrix() {
               )}
             </Select>
           </FormControl>
+          <Box
+            sx={{
+              backgroundColor: "#fff", // Dark background color
+              color: "ccc", // White text color for contrast
+              textAlign: "left",
+            }}
+          >
+            <Typography
+              variant="body2"
+              className="mt-4 mb-2"
+              sx={{ fontWeight: "bold" }}
+            >
+              AHP Scale:
+            </Typography>
+            <Typography
+              className="mb-3"
+              variant="caption"
+              sx={{ marginRight: "1rem" }}
+            >
+              <strong>1:</strong> Equal Importance
+            </Typography>
+            <Typography
+              className="mb-3"
+              variant="caption"
+              sx={{ marginRight: "1rem" }}
+            >
+              <strong>3:</strong> Moderate Importance
+            </Typography>
+            <Typography
+              sx={{ marginRight: "1rem" }}
+              className="mb-3"
+              variant="caption"
+            >
+              <strong>5:</strong> Strong Importance
+            </Typography>
+            <br />
+            <Typography
+              sx={{ marginRight: "1rem" }}
+              className="mb-3"
+              variant="caption"
+            >
+              <strong>7:</strong> Very Strong Importance
+            </Typography>
+            <Typography sx={{ marginRight: "1rem" }} variant="caption">
+              <strong>9:</strong> Extreme Importance
+            </Typography>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpenDialog(false)} color="primary">

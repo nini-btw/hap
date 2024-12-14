@@ -137,7 +137,7 @@ function CriteriaResult() {
         </TableContainer>
 
         {/* Display Consistency Ratio */}
-        <Typography variant="h6" sx={{ color: "black", mt: 3 }}>
+        <Typography variant="h6" sx={{ color: "black", mt: 2 }}>
           Consistency Ratio (CR):{" "}
           <span
             style={{

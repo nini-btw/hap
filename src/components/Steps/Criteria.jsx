@@ -20,7 +20,7 @@ import { save } from "../../rtk/slice/valueSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
-  const [rows, setRows] = useState(["c1", "c2", "c3"]); // Local state for rows
+  const [rows, setRows] = useState([]); // Local state for rows
   const [newCriteria, setNewCriteria] = useState(""); // Input field value
   const [editIndex, setEditIndex] = useState(null); // Edit mode index
   const dispatch = useDispatch();
@@ -92,6 +92,13 @@ function Criteria() {
         Set Your Criteria
       </Typography>
 
+      <Typography
+        variant="caption"
+        sx={{ color: "#ccc", mb: 5, mt: 2 }}
+        align="center"
+      >
+        * You have to add 2 criteria At least
+      </Typography>
       <Box
         sx={{
           display: "flex",
