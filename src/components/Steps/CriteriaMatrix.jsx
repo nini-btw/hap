@@ -23,6 +23,7 @@ import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
 import { saveMatrix } from "../../rtk/slice/matrixSlice"; // import the saveMatrix action
 import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
+import { useMediaQuery } from "@mui/material"; // For responsive screen size handling
 
 function CriteriaMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
@@ -32,6 +33,7 @@ function CriteriaMatrix() {
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
   const [newValue, setNewValue] = useState(1);
+  const isSmallScreen = useMediaQuery("(max-width:960px)"); // Check screen size
 
   useEffect(() => {
     if (criteria.length >= 2) {
@@ -83,7 +85,10 @@ function CriteriaMatrix() {
   const fractions = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2];
 
   return (
-    <section id="section4" className="section bg-light d-flex flex-column p-3">
+    <section
+      id="section4"
+      className="section bg-light d-flex flex-column p-3 gap-4"
+    >
       <Typography
         variant="h4"
         component="header"
@@ -99,7 +104,14 @@ function CriteriaMatrix() {
           </Typography>
         </Box>
       ) : (
-        <Box sx={{ display: "flex", width: "100%" }}>
+        <Box
+          sx={{
+            gap: "2rem",
+            display: "flex",
+            width: "100%",
+            flexDirection: isSmallScreen ? "column-reverse" : "row",
+          }}
+        >
           {/* Table Container - takes 3/4 of the width */}
           <TableContainer
             component={Paper}
@@ -107,7 +119,7 @@ function CriteriaMatrix() {
               backgroundColor: "#f3f6f9",
               border: "1px solid #e0e0e0",
               boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-              flexBasis: "75%", // Takes 3/4 of the width
+              flexBasis: isSmallScreen ? "100%" : "75%", // Takes 3/4 of the width
               marginRight: "16px", // Adds space between the table and instructions
               height: "100%",
             }}
@@ -171,7 +183,7 @@ function CriteriaMatrix() {
               color: "white", // White text color for contrast
               borderRadius: "8px",
               padding: "16px",
-              flexBasis: "25%", // Takes 1/4 of the width
+              flexBasis: isSmallScreen ? "100%" : "25%",
               boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
               textAlign: "left",
             }}
