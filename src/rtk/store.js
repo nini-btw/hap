@@ -3,6 +3,7 @@ import valueReducer from "./slice/valueSlice";
 import matrixReducer from "./slice/matrixSlice";
 import alternativeMatrixSlice from "./slice/alternativeMatrixSlice";
 import stepValidationReducer from "./slice/stepValidationSlice";
+import subCriteriaReducer from "./slice/subCriteriaSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,5 +11,6 @@ export const store = configureStore({
     criteria: matrixReducer,
     alternatives: alternativeMatrixSlice,
     stepValidation: stepValidationReducer,
+    subCriteria: subCriteriaReducer,
   },
 });

@@ -12,17 +12,31 @@ import {
   Button,
   IconButton,
   Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useDispatch, useSelector } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
+import { saveSubCriteria } from "../../rtk/slice/subCriteriaSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
   const [rows, setRows] = useState([]); // Local state for rows
   const [newCriteria, setNewCriteria] = useState(""); // Input field value
   const [editIndex, setEditIndex] = useState(null); // Edit mode index
+  const [openDialog, setOpenDialog] = useState(false); // Dialog state for sub-criteria
+  const [selectedCriterion, setSelectedCriterion] = useState(null); // Currently selected criterion for sub-criteria
+  const [newSubCriterion, setNewSubCriterion] = useState(""); // Input value for sub-criteria
+  const [subCriteria, setSubCriteria] = useState({}); // Local state for sub-criteria
   const dispatch = useDispatch();
   const inputRef = useRef(null); // Ref for input field
 
@@ -36,13 +50,12 @@ function Criteria() {
     }
   }, [storedCriteria]);
 
-  // Update Redux state whenever rows change
+  // Update Redux state whenever rows or sub-criteria change
   useEffect(() => {
     dispatch(save({ criteria: rows }));
-
-    // Validate the step
+    dispatch(saveSubCriteria(subCriteria));
     dispatch(setStepValid({ step: "criteria", valid: rows.length >= 2 }));
-  }, [rows, dispatch]);
+  }, [rows, subCriteria, dispatch]);
 
   const handleAddRow = () => {
     if (newCriteria.trim()) {
@@ -65,6 +78,12 @@ function Criteria() {
   const handleRemoveRow = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
+    // Remove sub-criteria for the removed criterion
+    setSubCriteria((prev) => {
+      const updatedSubCriteria = { ...prev };
+      delete updatedSubCriteria[rows[index]];
+      return updatedSubCriteria;
+    });
   };
 
   const handleEditRow = (index) => {
@@ -76,6 +95,70 @@ function Criteria() {
     if (e.key === "Enter") {
       handleAddRow();
     }
+  };
+
+  // Sub-Criteria Management
+  const handleOpenDialog = (criterion) => {
+    setSelectedCriterion(criterion);
+    setNewSubCriterion("");
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedCriterion(null);
+    setOpenDialog(false);
+  };
+
+  const handleAddSubCriterion = () => {
+    if (newSubCriterion.trim()) {
+      // Check if the sub-criterion already exists for the selected criterion
+      const subList = subCriteria[selectedCriterion] || [];
+      if (!subList.includes(newSubCriterion)) {
+        // If it doesn't exist, add it to the list
+        setSubCriteria((prev) => ({
+          ...prev,
+          [selectedCriterion]: [...subList, newSubCriterion],
+        }));
+        setNewSubCriterion(""); // Clear the input field
+      } else {
+        // Optionally, you can show an alert or message indicating the sub-criterion already exists
+        alert("This sub-criterion already exists!");
+      }
+    }
+  };
+
+  const handleRemoveSubCriterion = (criterion, index) => {
+    setSubCriteria((prev) => ({
+      ...prev,
+      [criterion]: prev[criterion].filter((_, i) => i !== index),
+    }));
+  };
+
+  const renderSubCriteria = (criterion) => {
+    const subList = subCriteria[criterion] || [];
+    return (
+      <Box sx={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        {subList.map((sub, index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "40px",
+              height: "40px",
+              borderRadius: "8px", // Make it a square with rounded corners
+              backgroundColor: "#7096bd",
+              color: "white",
+              textAlign: "center",
+              padding: "5px",
+            }}
+          >
+            {sub}
+          </Box>
+        ))}
+      </Box>
+    );
   };
 
   return (
@@ -97,7 +180,7 @@ function Criteria() {
         sx={{ color: "#ccc", mb: 5, mt: 2 }}
         align="center"
       >
-        * You have to add 2 criteria At least
+        * You have to add 2 criteria at least
       </Typography>
       <Box
         sx={{
@@ -133,7 +216,6 @@ function Criteria() {
       </Box>
 
       <TableContainer
-        id="table-container"
         component={Paper}
         sx={{
           backgroundColor: "#f3f6f9",
@@ -141,7 +223,6 @@ function Criteria() {
           boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
           maxWidth: "600px",
           margin: "0 auto",
-          paddingBottom: "0",
           maxHeight: "400px", // Add a max height to make scrolling work
           overflowY: "auto", // Enable vertical scrolling
         }}
@@ -152,13 +233,12 @@ function Criteria() {
               <TableCell sx={{ fontWeight: "bold", color: "#1976d2" }}>
                 Criteria
               </TableCell>
+              <TableCell sx={{ fontWeight: "bold", color: "#1976d2" }}>
+                Sub Criteria
+              </TableCell>
               <TableCell
-                sx={{
-                  fontWeight: "bold",
-                  color: "#1976d2",
-                  width: "1px",
-                  whiteSpace: "nowrap",
-                }}
+                width={"5rem"}
+                sx={{ fontWeight: "bold", color: "#1976d2" }}
               >
                 Actions
               </TableCell>
@@ -168,7 +248,7 @@ function Criteria() {
             {rows.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={2}
+                  colSpan={3}
                   sx={{ textAlign: "center", color: "#757575" }}
                 >
                   You have to add data.
@@ -178,13 +258,10 @@ function Criteria() {
               rows.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ color: "#424242" }}>{row}</TableCell>
+                  <TableCell>{renderSubCriteria(row)}</TableCell>
                   <TableCell>
                     <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
+                      sx={{ display: "flex", gap: "0.5rem", minWidth: "3rem" }}
                     >
                       <IconButton
                         color="primary"
@@ -198,6 +275,12 @@ function Criteria() {
                       >
                         <DeleteIcon />
                       </IconButton>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => handleOpenDialog(row)}
+                      >
+                        <AddCircleIcon />
+                      </IconButton>
                     </Box>
                   </TableCell>
                 </TableRow>
@@ -206,6 +289,46 @@ function Criteria() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {/* Sub-Criteria Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Manage Sub-Criteria for {selectedCriterion}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="Add Sub-Criterion"
+            value={newSubCriterion}
+            onChange={(e) => setNewSubCriterion(e.target.value)}
+            variant="outlined"
+            size="small"
+            fullWidth
+            sx={{ marginBottom: "1rem", marginTop: "1rem" }}
+            onKeyDown={(e) => e.key === "Enter" && handleAddSubCriterion()}
+          />
+          <List>
+            {(subCriteria[selectedCriterion] || []).map((sub, index) => (
+              <ListItem key={index}>
+                <ListItemText primary={sub} />
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="end"
+                    color="error"
+                    onClick={() =>
+                      handleRemoveSubCriterion(selectedCriterion, index)
+                    }
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            ))}
+          </List>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </section>
   );
 }
