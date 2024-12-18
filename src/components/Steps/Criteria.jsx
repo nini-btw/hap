@@ -26,7 +26,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useDispatch, useSelector } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
-import { saveSubCriteria } from "../../rtk/slice/subCriteriaSlice";
+/* import { saveSubCriteria } from "../../rtk/slice/subCriteriaSlice"; */
 import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
@@ -53,7 +53,7 @@ function Criteria() {
   // Update Redux state whenever rows or sub-criteria change
   useEffect(() => {
     dispatch(save({ criteria: rows }));
-    dispatch(saveSubCriteria(subCriteria));
+    dispatch(save({ subCriteria: subCriteria }));
     dispatch(setStepValid({ step: "criteria", valid: rows.length >= 2 }));
   }, [rows, subCriteria, dispatch]);
 

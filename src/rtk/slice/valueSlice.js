@@ -6,6 +6,7 @@ export const valueSlice = createSlice({
     goal: "", // To store the goal data
     criteria: [], // To store the table data
     alternatives: [], // To store the Alternative
+    subCriteria: {},
   },
   reducers: {
     save: (state, action) => {

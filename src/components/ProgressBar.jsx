@@ -17,6 +17,7 @@ import CriteriaResult from "./Steps/CriteriaResult";
 import Alternative from "./Steps/Alternative";
 import AlternativeMatrix from "./Steps/AlternativeMatrix";
 import AlternativeResult from "./Steps/AlternativeResult";
+import SubCriteria from "./Steps/SubCriteria";
 
 // Import your custom SASS styles
 import "../style/calc.sass";
@@ -25,6 +26,7 @@ const steps = [
   { key: "goal", label: "Define Goal" },
   { key: "criteria", label: "Set Criteria" },
   { key: "criteriaMatrix", label: "Criteria Pairwise" },
+  { key: "subCriteria", label: "Sub Criteria" },
   { key: "criteriaResult", label: "Criteria Result" },
   { key: "alternative", label: "Add Alternatives" },
   { key: "alternativeMatrix", label: "Alternative Pairwise" },
@@ -35,6 +37,7 @@ const stepComponents = [
   <Goal key="goal" />,
   <Criteria key="criteria" />,
   <CriteriaMatrix key="criteriaMatrix" />,
+  <SubCriteria key="SubCriteria" />,
   <CriteriaResult key="criteriaResult" />,
   <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
