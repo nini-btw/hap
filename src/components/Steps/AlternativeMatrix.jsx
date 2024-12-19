@@ -34,6 +34,7 @@ function AlternativeMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
   const dispatch = useDispatch();
 
+  const subCriteria = useSelector((state) => state.subCriteria.matrices);
   const [matrices, setMatrices] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
@@ -54,7 +55,8 @@ function AlternativeMatrix() {
 
       setMatrices(initialMatrices);
     }
-  }, [alternatives, criteria]);
+    console.log(subCriteria);
+  }, [alternatives, criteria, subCriteria]);
 
   const handleCellClick = (criterion, row, col) => {
     if (row !== col) {

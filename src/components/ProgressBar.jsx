@@ -23,25 +23,25 @@ import SubCriteria from "./Steps/SubCriteria";
 import "../style/calc.sass";
 
 const steps = [
-  { key: "goal", label: "Define Goal" },
+  /*   { key: "goal", label: "Define Goal" }, */
   { key: "criteria", label: "Set Criteria" },
-  { key: "criteriaMatrix", label: "Criteria Pairwise" },
   { key: "subCriteria", label: "Sub Criteria" },
+  /*   { key: "criteriaMatrix", label: "Criteria Pairwise" },
   { key: "criteriaResult", label: "Criteria Result" },
   { key: "alternative", label: "Add Alternatives" },
   { key: "alternativeMatrix", label: "Alternative Pairwise" },
-  { key: "alternativeResult", label: "Alternative Result" },
+  { key: "alternativeResult", label: "Alternative Result" }, */
 ];
 
 const stepComponents = [
-  <Goal key="goal" />,
-  <Criteria key="criteria" />,
-  <CriteriaMatrix key="criteriaMatrix" />,
+  /*   <Goal key="goal" />,
+   */ <Criteria key="criteria" />,
   <SubCriteria key="SubCriteria" />,
+  /*  <CriteriaMatrix key="criteriaMatrix" />,
   <CriteriaResult key="criteriaResult" />,
   <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
-  <AlternativeResult key="alternativeResult" />,
+  <AlternativeResult key="alternativeResult" />, */
 ];
 
 export default function ProgressBar() {

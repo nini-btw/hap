@@ -23,7 +23,10 @@ import {
 import MathJax from "react-mathjax2";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice"; // Assuming you're using this for validation
 import { useSelector, useDispatch } from "react-redux";
-import { saveSubCriteriaMatrices } from "../../rtk/slice/subCriteriaSlice";
+import {
+  calculateNormalizedMatrices,
+  saveSubCriteriaMatrices,
+} from "../../rtk/slice/subCriteriaSlice";
 const SubCriteria = () => {
   const subCriteria = useSelector((state) => state.value.subCriteria);
   const isSmallScreen = useMediaQuery("(max-width:600px)");
@@ -208,6 +211,7 @@ const SubCriteria = () => {
             // Dispatch action to save the matrix to the Redux store
             dispatch(setStepValid({ step: "subCriteria", valid: true }));
             dispatch(saveSubCriteriaMatrices(matrices));
+            dispatch(calculateNormalizedMatrices());
           }}
           sx={{ textTransform: "none", padding: "10px 20px" }}
         >
