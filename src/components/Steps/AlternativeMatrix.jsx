@@ -109,7 +109,11 @@ function AlternativeMatrix() {
       <Typography
         variant="h4"
         component="header"
-        sx={{ color: "black", mb: 2 }}
+        sx={{
+          color: "black",
+          marginBottom: "3rem !important",
+          marginTop: "1rem !important",
+        }}
       >
         Alternative Pairwise
       </Typography>
@@ -133,19 +137,6 @@ function AlternativeMatrix() {
         >
           {criteria.map((criterion, index) => (
             <div key={index}>
-              <Typography
-                variant="h5"
-                sx={{
-                  color: "black",
-                  mb: 2,
-                  mt: 5,
-                  textDecoration: "underline",
-                  width: "100%",
-                  textAlign: "left",
-                }}
-              >
-                {criterion}
-              </Typography>
               <TableContainer
                 component={Paper}
                 sx={{
@@ -155,8 +146,19 @@ function AlternativeMatrix() {
                   flexBasis: "75%",
                   marginRight: "16px",
                   width: "60vw",
+                  marginBottom: "1rem",
                 }}
               >
+                <h3
+                  style={{
+                    textAlign: "center",
+                    color: "#1976d2",
+                    fontWeight: "bold",
+                    marginTop: "16px",
+                  }}
+                >
+                  {criterion}
+                </h3>
                 <Table>
                   <TableHead>
                     <TableRow sx={{ backgroundColor: "#e3f2fd" }}>

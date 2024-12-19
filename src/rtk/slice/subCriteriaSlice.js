@@ -7,8 +7,8 @@ export const subCriteriaSlice = createSlice({
     normalizedMatrix: {},
   },
   reducers: {
-    saveSubCriteria: (state, action) => {
-      return { ...state, ...action.payload };
+    saveSubCriteriaMatrices: (state, action) => {
+      state.matrices = action.payload;
     },
     calculateNormalizedMatrices: (state) => {
       const criteria = Object.keys(state.matrices);
@@ -30,6 +30,6 @@ export const subCriteriaSlice = createSlice({
   },
 });
 
-export const { saveSubCriteria, calculateNormalizedMatrices } =
+export const { saveSubCriteriaMatrices, calculateNormalizedMatrices } =
   subCriteriaSlice.actions;
 export default subCriteriaSlice.reducer;
