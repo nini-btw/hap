@@ -43,14 +43,11 @@ function AlternativeMatrix() {
 
   useEffect(() => {
     if (alternatives.length >= 2 && criteria.length > 0) {
-      // Default values for matrices
-
-      // Check if the criteria names match the predefined matrices
       const initialMatrices = {};
       criteria.forEach((criterion) => {
         initialMatrices[criterion] = alternatives.map(() =>
           Array(alternatives.length).fill(1)
-        ); // Otherwise, fill with default ones
+        );
       });
 
       setMatrices(initialMatrices);
@@ -70,7 +67,6 @@ function AlternativeMatrix() {
   const handleValueChange = (value) => {
     const updatedMatrices = { ...matrices };
 
-    // Update the selected cell and its reciprocal
     const matrix = updatedMatrices[currentCriterion];
     matrix[currentCell.row][currentCell.col] = value;
     matrix[currentCell.col][currentCell.row] = value !== 0 ? 1 / value : 0; // Handle reciprocal
@@ -90,11 +86,7 @@ function AlternativeMatrix() {
       );
     });
     dispatch(calculateNormalizedMatrices());
-
-    // Calculate alternative weights
     dispatch(calculateAlternativeWeights());
-
-    // Calculate overall priorities
     dispatch(calculateOverallPriorities(criteriaWeights));
   };
 
@@ -225,6 +217,7 @@ function AlternativeMatrix() {
         </Box>
       )}
 
+      {/* Value Selecting Dialog */}
       <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
         <DialogTitle>
           How much do you prefer{" "}
@@ -312,6 +305,7 @@ function AlternativeMatrix() {
         </DialogActions>
       </Dialog>
 
+      {/* Save Button */}
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button
           variant="contained"

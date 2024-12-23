@@ -12,47 +12,61 @@ export const subCriteriaSlice = createSlice({
       state.matrices = action.payload;
     },
     calculateNormalizedMatrices: (state) => {
-      const matrices = state.matrices;
-      const normalizedMatrix = {};
-      const weights = {};
+      // Calculate normalized matrices
 
-      for (const key in matrices) {
-        const matrix = matrices[key];
-        const numRows = matrix.length;
-        const numCols = matrix[0]?.length || 0;
+      const norm = (m) => {
+        let r = m.length;
+        let c = m[0].length;
 
-        // Initialize sums for each column
-        const columnSums = new Array(numCols).fill(0);
+        let colRes = [];
 
-        // Calculate column sums
-        for (let i = 0; i < numRows; i++) {
-          for (let j = 0; j < numCols; j++) {
-            columnSums[j] += matrix[i][j];
+        //column sum
+        for (let i = 0; i < c; i++) {
+          let s = 0;
+          for (let j = 0; j < r; j++) {
+            s += m[j][i];
           }
+          colRes.push(s);
         }
 
-        // Normalize the matrix and calculate row averages (weights)
-        const normalized = [];
-        const rowWeights = new Array(numRows).fill(0);
+        let nm = [];
 
-        for (let i = 0; i < numRows; i++) {
-          normalized[i] = [];
-          for (let j = 0; j < numCols; j++) {
-            const value = matrix[i][j] / columnSums[j];
-            normalized[i][j] = value;
-            rowWeights[i] += value;
+        for (let i = 0; i < r; i++) {
+          const row = [];
+          for (let j = 0; j < c; j++) {
+            row.push(m[i][j] / colRes[j]);
           }
-          // Calculate the weight for the current row (average of normalized values)
-          rowWeights[i] /= numCols;
+          nm.push(row);
         }
+        return nm;
+      };
+      const weight = (nm) => {
+        let r = nm.length;
+        let c = nm[0].length;
 
-        // Save the normalized matrix and weights for the current key
-        normalizedMatrix[key] = normalized;
-        weights[key] = rowWeights;
-      }
+        let w = [];
+        let s = 0;
+        for (let i = 0; i < r; i++) {
+          s = 0;
+          for (let j = 0; j < c; j++) {
+            s += nm[i][j];
+          }
+          w.push(s / c);
+        }
+        return w;
+      };
+      let normalized = Object.entries(state.matrices).map(([key, value]) => {
+        return [key, norm(value)];
+      });
+      let w = normalized.map(([key, value]) => {
+        return [key, weight(value)];
+      });
 
-      state.normalizedMatrix = normalizedMatrix;
-      state.weights = weights;
+      normalized = Object.fromEntries(normalized); // Convert back to an object
+      w = Object.fromEntries(w); // Convert back to an object
+
+      state.weights = w;
+      state.normalizedMatrix = normalized;
     },
   },
 });
