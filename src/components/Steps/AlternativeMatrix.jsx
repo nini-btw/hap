@@ -34,7 +34,7 @@ function AlternativeMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
   const dispatch = useDispatch();
 
-  const subCriteria = useSelector((state) => state.subCriteria.matrices);
+  const subCriteria = useSelector((state) => state.value.subCriteria);
   const [matrices, setMatrices] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
@@ -52,7 +52,6 @@ function AlternativeMatrix() {
 
       setMatrices(initialMatrices);
     }
-    console.log(subCriteria);
   }, [alternatives, criteria, subCriteria]);
 
   const handleCellClick = (criterion, row, col) => {
@@ -129,91 +128,171 @@ function AlternativeMatrix() {
             textAlign: "center",
           }}
         >
-          {criteria.map((criterion, index) => (
-            <div key={index}>
-              <TableContainer
-                component={Paper}
-                sx={{
-                  backgroundColor: "#f3f6f9",
-                  border: "1px solid #e0e0e0",
-                  boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-                  flexBasis: "75%",
-                  marginRight: "16px",
-                  width: "60vw",
-                  marginBottom: "1rem",
-                }}
-              >
-                <h3
-                  style={{
-                    textAlign: "center",
-                    color: "#1976d2",
-                    fontWeight: "bold",
-                    marginTop: "16px",
-                  }}
-                >
-                  {criterion}
-                </h3>
-                <Table>
-                  <TableHead>
-                    <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
-                      <TableCell
-                        sx={{ fontWeight: "bold", color: "#1976d2" }}
-                      ></TableCell>
-                      {alternatives.map((alt, altIndex) => (
-                        <TableCell
-                          key={altIndex}
-                          sx={{ fontWeight: "bold", color: "#1976d2" }}
-                        >
-                          {alt}
-                        </TableCell>
-                      ))}
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {matrices[criterion]?.map((row, rowIndex) => (
-                      <TableRow key={rowIndex}>
-                        <TableCell
-                          sx={{ fontWeight: "bold", color: "#1976d2" }}
-                        >
-                          {alternatives[rowIndex]}
-                        </TableCell>
-                        {row.map((cellValue, colIndex) => (
-                          <TableCell
-                            key={colIndex}
+          {criteria.map((criterion, index) => {
+            if (!(criterion in subCriteria)) {
+              return (
+                <>
+                  <div key={index}>
+                    <TableContainer
+                      component={Paper}
+                      sx={{
+                        backgroundColor: "#f3f6f9",
+                        border: "1px solid #e0e0e0",
+                        boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
+                        flexBasis: "75%",
+                        marginRight: "16px",
+                        width: "60vw",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      <h3
+                        style={{
+                          textAlign: "center",
+                          color: "#1976d2",
+                          fontWeight: "bold",
+                          marginTop: "16px",
+                        }}
+                      >
+                        {criterion}
+                      </h3>
+                      <Table>
+                        <TableHead>
+                          <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
+                            <TableCell
+                              sx={{ fontWeight: "bold", color: "#1976d2" }}
+                            ></TableCell>
+                            {alternatives.map((alt, altIndex) => (
+                              <TableCell
+                                key={altIndex}
+                                sx={{ fontWeight: "bold", color: "#1976d2" }}
+                              >
+                                {alt}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {matrices[criterion]?.map((row, rowIndex) => {
+                            return (
+                              <>
+                                <TableRow key={rowIndex}>
+                                  <TableCell
+                                    sx={{
+                                      fontWeight: "bold",
+                                      color: "#1976d2",
+                                    }}
+                                  >
+                                    {alternatives[rowIndex]}
+                                  </TableCell>
+                                  {row.map((cellValue, colIndex) => (
+                                    <TableCell
+                                      key={colIndex}
+                                      sx={{
+                                        color: "#424242",
+                                        cursor:
+                                          rowIndex !== colIndex
+                                            ? "pointer"
+                                            : "default",
+                                        backgroundColor:
+                                          rowIndex === colIndex
+                                            ? "#e3f2fd"
+                                            : "white",
+                                        textAlign: "center",
+                                      }}
+                                      onClick={() =>
+                                        handleCellClick(
+                                          criterion,
+                                          rowIndex,
+                                          colIndex
+                                        )
+                                      }
+                                    >
+                                      {rowIndex === colIndex ? (
+                                        "1"
+                                      ) : (
+                                        <MathJax.Context>
+                                          <MathJax.Node>
+                                            {Number.isInteger(cellValue)
+                                              ? cellValue
+                                              : `\\frac{1}{${(
+                                                  1 / cellValue
+                                                ).toFixed(0)}}`}
+                                          </MathJax.Node>
+                                        </MathJax.Context>
+                                      )}
+                                    </TableCell>
+                                  ))}
+                                </TableRow>
+                              </>
+                            );
+                          })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </div>
+                </>
+              );
+            } else {
+              return (
+                <>
+                  {subCriteria[criterion].map((m) => {
+                    return (
+                      <>
+                        <div key={index}>
+                          <TableContainer
+                            component={Paper}
                             sx={{
-                              color: "#424242",
-                              cursor:
-                                rowIndex !== colIndex ? "pointer" : "default",
-                              backgroundColor:
-                                rowIndex === colIndex ? "#e3f2fd" : "white",
-                              textAlign: "center",
+                              backgroundColor: "#f3f6f9",
+                              border: "1px solid #e0e0e0",
+                              boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
+                              flexBasis: "75%",
+                              marginRight: "16px",
+                              width: "60vw",
+                              marginBottom: "1rem",
                             }}
-                            onClick={() =>
-                              handleCellClick(criterion, rowIndex, colIndex)
-                            }
                           >
-                            {rowIndex === colIndex ? (
-                              "1"
-                            ) : (
-                              <MathJax.Context>
-                                <MathJax.Node>
-                                  {Number.isInteger(cellValue)
-                                    ? cellValue
-                                    : `\\frac{1}{${(1 / cellValue).toFixed(
-                                        0
-                                      )}}`}
-                                </MathJax.Node>
-                              </MathJax.Context>
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
-          ))}
+                            <h3
+                              style={{
+                                textAlign: "center",
+                                color: "#1976d2",
+                                fontWeight: "bold",
+                                marginTop: "16px",
+                              }}
+                            >
+                              {m}
+                            </h3>
+                            <Table>
+                              <TableHead>
+                                <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
+                                  <TableCell
+                                    sx={{
+                                      fontWeight: "bold",
+                                      color: "#1976d2",
+                                    }}
+                                  ></TableCell>
+                                  {alternatives.map((alt, altIndex) => (
+                                    <TableCell
+                                      key={altIndex}
+                                      sx={{
+                                        fontWeight: "bold",
+                                        color: "#1976d2",
+                                      }}
+                                    >
+                                      {alt}
+                                    </TableCell>
+                                  ))}
+                                </TableRow>
+                              </TableHead>
+                            </Table>
+                          </TableContainer>
+                        </div>
+                      </>
+                    );
+                  })}
+                </>
+              );
+            }
+          })}
         </Box>
       )}
 

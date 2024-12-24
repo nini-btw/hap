@@ -102,7 +102,7 @@ function SubCriteria() {
             marginTop: "1rem !important",
           }}
         >
-          Alternative Pairwise
+          Sub Criteria Pairwise
         </Typography>
 
         {subCriteria.length < 2 ? (

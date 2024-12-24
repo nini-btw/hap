@@ -18,30 +18,33 @@ import Alternative from "./Steps/Alternative";
 import AlternativeMatrix from "./Steps/AlternativeMatrix";
 import AlternativeResult from "./Steps/AlternativeResult";
 import SubCriteria from "./Steps/SubCriteria";
+import SubCriteriaResult from "./Steps/SubCriteriaResult";
 
 // Import your custom SASS styles
 import "../style/calc.sass";
 
 const steps = [
-  /*   { key: "goal", label: "Define Goal" }, */
   { key: "criteria", label: "Set Criteria" },
   { key: "subCriteria", label: "Sub Criteria" },
-  /*   { key: "criteriaMatrix", label: "Criteria Pairwise" },
+  { key: "subCriteriaResult", label: "Sub Criteria Result" },
+  { key: "goal", label: "Define Goal" },
+  { key: "criteriaMatrix", label: "Criteria Pairwise" },
   { key: "criteriaResult", label: "Criteria Result" },
   { key: "alternative", label: "Add Alternatives" },
   { key: "alternativeMatrix", label: "Alternative Pairwise" },
-  { key: "alternativeResult", label: "Alternative Result" }, */
+  { key: "alternativeResult", label: "Alternative Result" },
 ];
 
 const stepComponents = [
-  /*   <Goal key="goal" />,
-   */ <Criteria key="criteria" />,
+  <Criteria key="criteria" />,
   <SubCriteria key="SubCriteria" />,
-  /*  <CriteriaMatrix key="criteriaMatrix" />,
+  <SubCriteriaResult key="Sub Criteria Result" />,
+  <Goal key="goal" />,
+  <CriteriaMatrix key="criteriaMatrix" />,
   <CriteriaResult key="criteriaResult" />,
   <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
-  <AlternativeResult key="alternativeResult" />, */
+  <AlternativeResult key="alternativeResult" />,
 ];
 
 export default function ProgressBar() {

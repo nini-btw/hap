@@ -30,7 +30,7 @@ import { save } from "../../rtk/slice/valueSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
-  const [rows, setRows] = useState(["a", "b"]); // Local state for rows
+  const [rows, setRows] = useState(["a", "b", "c"]); // Local state for rows
   const [newCriteria, setNewCriteria] = useState(""); // Input field value
   const [editIndex, setEditIndex] = useState(null); // Edit mode index
   const [openDialog, setOpenDialog] = useState(false); // Dialog state for sub-criteria
@@ -38,7 +38,6 @@ function Criteria() {
   const [newSubCriterion, setNewSubCriterion] = useState(""); // Input value for sub-criteria
   const [subCriteria, setSubCriteria] = useState({
     a: ["a1", "a2"],
-    b: ["b2", "b2", "b3"],
   }); // Local state for sub-criteria
   const dispatch = useDispatch();
   const inputRef = useRef(null); // Ref for input field

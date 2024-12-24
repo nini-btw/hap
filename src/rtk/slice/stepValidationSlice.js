@@ -9,6 +9,7 @@ const initialState = {
   alternative: false,
   alternativeMatrix: true,
   subCriteria: false,
+  subCriteriaResult: true,
 };
 
 const stepValidationSlice = createSlice({
