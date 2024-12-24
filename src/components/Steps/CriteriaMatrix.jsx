@@ -29,7 +29,11 @@ function CriteriaMatrix() {
   const criteria = useSelector((state) => state.value.criteria);
   const storedCriteria = useSelector((state) => state.value.criteria.matrix);
   const dispatch = useDispatch();
-  const [matrix, setMatrix] = useState([]);
+  const [matrix, setMatrix] = useState([
+    [1, 3, 5],
+    [1 / 3, 1, 2],
+    [1 / 5, 1 / 2, 1],
+  ]);
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
   const [newValue, setNewValue] = useState(1);
@@ -38,8 +42,8 @@ function CriteriaMatrix() {
   useEffect(() => {
     if (criteria.length >= 2) {
       // Check if there's stored criteria to use
-      if (storedCriteria && storedCriteria.length > 0) {
-        setMatrix(storedCriteria);
+      if (matrix != null) {
+        setMatrix(matrix);
       } else {
         // Create a new matrix
         const newMatrix = criteria.map((_, rowIndex) =>

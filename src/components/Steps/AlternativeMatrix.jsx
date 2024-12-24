@@ -23,6 +23,7 @@ import {
   calculateNormalizedMatrices,
   calculateAlternativeWeights,
   calculateOverallPriorities,
+  addW,
 } from "../../rtk/slice/alternativeMatrixSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -52,9 +53,22 @@ function AlternativeMatrix() {
         }
       });
 
-      setMatrices(initialMatrices);
+      setMatrices({
+        b: [
+          [1, 3, 4],
+          [1 / 3, 1, 2],
+          [1 / 4, 1 / 2, 1],
+        ],
+        c: [
+          [1, 1 / 2, 1 / 3],
+          [2, 1, 1 / 2],
+          [3, 2, 1],
+        ],
+      });
     }
   }, [alternatives, criteria, subCriteria]);
+
+  const calcSubWeight = (sw, asw) => {};
 
   const handleCellClick = (criterion, row, col) => {
     if (row !== col) {
@@ -89,6 +103,7 @@ function AlternativeMatrix() {
     dispatch(calculateNormalizedMatrices());
     dispatch(calculateAlternativeWeights());
     dispatch(calculateOverallPriorities(criteriaWeights));
+    dispatch(addW({ key: "a", data: [1, 1, 1] }));
   };
 
   const handleBlur = () => {
@@ -96,7 +111,6 @@ function AlternativeMatrix() {
       handleValueChange(newValue);
     }
   };
-
   // List of reciprocal fractions
   const fractions = [1 / 9, 1 / 8, 1 / 7, 1 / 6, 1 / 5, 1 / 4, 1 / 3, 1 / 2];
   return (

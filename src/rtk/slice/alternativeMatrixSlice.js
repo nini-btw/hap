@@ -77,6 +77,12 @@ export const alternativeMatrixSlice = createSlice({
         (priority) => priority === maxPriority
       );
     },
+    addW: (state, action) => {
+      state.weights = {
+        ...state.weights,
+        [action.payload.key]: action.payload.data,
+      };
+    },
   },
 });
 
@@ -85,6 +91,7 @@ export const {
   calculateNormalizedMatrices,
   calculateAlternativeWeights,
   calculateOverallPriorities,
+  addW,
 } = alternativeMatrixSlice.actions;
 
 export default alternativeMatrixSlice.reducer;

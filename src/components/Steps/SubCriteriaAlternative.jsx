@@ -24,6 +24,7 @@ import {
   calculateAlternativeWeights,
   calculateOverallPriorities,
 } from "../../rtk/slice/subAlternativeSlice";
+import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
@@ -54,7 +55,18 @@ function SubCriteriaAlternative() {
           });
         }
       });
-      setMatrices(initialMatrices);
+      setMatrices({
+        a1: [
+          [1, 3, 2],
+          [1 / 3, 1, 1 / 2],
+          [1 / 2, 2, 1],
+        ],
+        a2: [
+          [1, 2, 3],
+          [1 / 2, 1, 2],
+          [1 / 3, 1 / 2, 1],
+        ],
+      });
     }
   }, []);
 
@@ -89,6 +101,7 @@ function SubCriteriaAlternative() {
         })
       );
     });
+    dispatch(setStepValid({ step: "subCriteriaAlternative", valid: true }));
     dispatch(calculateNormalizedMatrices());
     dispatch(calculateAlternativeWeights());
     dispatch(calculateOverallPriorities(criteriaWeights));
