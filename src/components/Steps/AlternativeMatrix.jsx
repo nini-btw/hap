@@ -52,18 +52,7 @@ function AlternativeMatrix() {
         }
       });
 
-      setMatrices({
-        b: [
-          [1, 3, 4],
-          [1 / 3, 1, 2],
-          [1 / 4, 1 / 2, 1],
-        ],
-        c: [
-          [1, 1 / 2, 1 / 3],
-          [2, 1, 1 / 2],
-          [3, 2, 1],
-        ],
-      });
+      setMatrices(initialMatrices);
     }
   }, [alternatives, criteria, subCriteria]);
 

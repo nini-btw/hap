@@ -37,11 +37,11 @@ function CriteriaMatrix() {
 
   useEffect(() => {
     if (criteria.length >= 2) {
-      // Check if there's stored criteria to use
-      if (matrix != null) {
-        setMatrix(matrix);
+      if (storedCriteria && storedCriteria.length === criteria.length) {
+        // Use the stored matrix if it matches the criteria length
+        setMatrix(storedCriteria);
       } else {
-        // Create a new matrix
+        // Create a new matrix with diagonal elements as 1
         const newMatrix = criteria.map((_, rowIndex) =>
           criteria.map((_, colIndex) => (rowIndex === colIndex ? 1 : 1))
         );
