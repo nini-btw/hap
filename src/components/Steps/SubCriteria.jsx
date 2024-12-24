@@ -51,12 +51,7 @@ function SubCriteria() {
         Array(size).fill(1)
       );
     });
-    setMatrices({
-      a: [
-        [1, 3],
-        [1 / 3, 1],
-      ],
-    });
+    setMatrices(initialMatrices);
   }, [subCriteria]);
 
   const handleSave = () => {

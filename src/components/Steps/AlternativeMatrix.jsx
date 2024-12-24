@@ -23,7 +23,6 @@ import {
   calculateNormalizedMatrices,
   calculateAlternativeWeights,
   calculateOverallPriorities,
-  addW,
 } from "../../rtk/slice/alternativeMatrixSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -68,8 +67,6 @@ function AlternativeMatrix() {
     }
   }, [alternatives, criteria, subCriteria]);
 
-  const calcSubWeight = (sw, asw) => {};
-
   const handleCellClick = (criterion, row, col) => {
     if (row !== col) {
       setCurrentCriterion(criterion);
@@ -103,7 +100,6 @@ function AlternativeMatrix() {
     dispatch(calculateNormalizedMatrices());
     dispatch(calculateAlternativeWeights());
     dispatch(calculateOverallPriorities(criteriaWeights));
-    dispatch(addW({ key: "a", data: [1, 1, 1] }));
   };
 
   const handleBlur = () => {

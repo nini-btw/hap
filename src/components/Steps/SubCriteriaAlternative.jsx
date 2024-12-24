@@ -24,6 +24,7 @@ import {
   calculateAlternativeWeights,
   calculateOverallPriorities,
 } from "../../rtk/slice/subAlternativeSlice";
+import { addW } from "../../rtk/slice/alternativeMatrixSlice";
 import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
@@ -33,9 +34,10 @@ function SubCriteriaAlternative() {
   const criteriaWeights = useSelector((state) => state.criteria.weights);
   const alternatives = useSelector((state) => state.value.alternatives);
   const criteria = useSelector((state) => state.value.criteria);
-  const dispatch = useDispatch();
-
+  const subWeights = useSelector((state) => state.subCriteria.weights);
+  const altSubWeights = useSelector((state) => state.subAlternatives.weights);
   const subCriteria = useSelector((state) => state.value.subCriteria);
+  const dispatch = useDispatch();
 
   const [matrices, setMatrices] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
@@ -55,19 +57,9 @@ function SubCriteriaAlternative() {
           });
         }
       });
-      setMatrices({
-        a1: [
-          [1, 3, 2],
-          [1 / 3, 1, 1 / 2],
-          [1 / 2, 2, 1],
-        ],
-        a2: [
-          [1, 2, 3],
-          [1 / 2, 1, 2],
-          [1 / 3, 1 / 2, 1],
-        ],
-      });
+      setMatrices(initialMatrices);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleCellClick = (criterion, row, col) => {
@@ -111,6 +103,43 @@ function SubCriteriaAlternative() {
     if (newValue) {
       handleValueChange(newValue);
     }
+  };
+
+  const createMatrices = (subCriteria, object2) => {
+    const result = {};
+
+    // Iterate over subCriteria keys
+    Object.keys(subCriteria).forEach((key) => {
+      const columns = subCriteria[key]; // e.g., ["a1", "a2"]
+      const matrix = columns.map((columnKey) => object2[columnKey]); // Get data for each column
+      result[key] = matrix[0].map((gg, rowIndex) =>
+        matrix.map((col) => col[rowIndex])
+      ); // Transpose to match matrix structure
+    });
+
+    return result;
+  };
+
+  const aggregation = (subWeight, altSubWeight) => {
+    const results = {};
+    Object.keys(subWeight).forEach((key) => {
+      const sub = subWeight[key];
+      const altSub = altSubWeight[key];
+
+      results[key] = altSub.map((row) =>
+        row.reduce((sum, col, colIndex) => sum + col * sub[colIndex], 0)
+      );
+    });
+
+    return results;
+  };
+
+  const handleR = () => {
+    const matrices = createMatrices(subCriteria, altSubWeights);
+    let agr = aggregation(subWeights, matrices);
+    Object.keys(agr).map((key) => {
+      dispatch(addW({ key: key, data: agr[key] }));
+    });
   };
 
   // List of reciprocal fractions
@@ -363,6 +392,16 @@ function SubCriteriaAlternative() {
           variant="contained"
           color="primary"
           onClick={handleSaveMatrices}
+          sx={{ textTransform: "none", padding: "10px 20px" }}
+        >
+          Save All Matrices
+        </Button>
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={handleR}
           sx={{ textTransform: "none", padding: "10px 20px" }}
         >
           Save All Matrices
