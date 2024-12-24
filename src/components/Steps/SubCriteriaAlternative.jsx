@@ -23,18 +23,19 @@ import {
   calculateNormalizedMatrices,
   calculateAlternativeWeights,
   calculateOverallPriorities,
-} from "../../rtk/slice/alternativeMatrixSlice";
+} from "../../rtk/slice/subAlternativeSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
 
-function AlternativeMatrix() {
+function SubCriteriaAlternative() {
   const criteriaWeights = useSelector((state) => state.criteria.weights);
   const alternatives = useSelector((state) => state.value.alternatives);
   const criteria = useSelector((state) => state.value.criteria);
   const dispatch = useDispatch();
 
   const subCriteria = useSelector((state) => state.value.subCriteria);
+
   const [matrices, setMatrices] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
@@ -45,16 +46,17 @@ function AlternativeMatrix() {
     if (alternatives.length >= 2 && criteria.length > 0) {
       const initialMatrices = {};
       criteria.forEach((criterion) => {
-        if (!(criterion in subCriteria)) {
-          initialMatrices[criterion] = alternatives.map(() =>
-            Array(alternatives.length).fill(1)
-          );
+        if (criterion in subCriteria) {
+          subCriteria[criterion].map((e) => {
+            initialMatrices[e] = alternatives.map(() =>
+              Array(alternatives.length).fill(1)
+            );
+          });
         }
       });
-
       setMatrices(initialMatrices);
     }
-  }, [alternatives, criteria, subCriteria]);
+  }, []);
 
   const handleCellClick = (criterion, row, col) => {
     if (row !== col) {
@@ -78,6 +80,7 @@ function AlternativeMatrix() {
   };
 
   const handleSaveMatrices = () => {
+    console.log(matrices);
     Object.keys(matrices).forEach((criterion) => {
       dispatch(
         saveMatrix({
@@ -131,109 +134,123 @@ function AlternativeMatrix() {
           }}
         >
           {criteria.map((criterion, index) => {
-            if (!(criterion in subCriteria)) {
-              return (
-                <>
-                  <div key={index}>
-                    <TableContainer
-                      component={Paper}
-                      sx={{
-                        backgroundColor: "#f3f6f9",
-                        border: "1px solid #e0e0e0",
-                        boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-                        flexBasis: "75%",
-                        marginRight: "16px",
-                        width: "60vw",
-                        marginBottom: "1rem",
-                      }}
-                    >
-                      <h3
-                        style={{
-                          textAlign: "center",
-                          color: "#1976d2",
-                          fontWeight: "bold",
-                          marginTop: "16px",
-                        }}
-                      >
-                        {criterion}
-                      </h3>
-                      <Table>
-                        <TableHead>
-                          <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
-                            <TableCell
-                              sx={{ fontWeight: "bold", color: "#1976d2" }}
-                            ></TableCell>
-                            {alternatives.map((alt, altIndex) => (
-                              <TableCell
-                                key={altIndex}
-                                sx={{ fontWeight: "bold", color: "#1976d2" }}
+            if (criterion in subCriteria) {
+              {
+                return (
+                  <>
+                    {subCriteria[criterion].map((sub) => {
+                      return (
+                        <>
+                          <div key={index}>
+                            <TableContainer
+                              component={Paper}
+                              sx={{
+                                backgroundColor: "#f3f6f9",
+                                border: "1px solid #e0e0e0",
+                                boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
+                                flexBasis: "75%",
+                                marginRight: "16px",
+                                width: "60vw",
+                                marginBottom: "1rem",
+                              }}
+                            >
+                              <h3
+                                style={{
+                                  textAlign: "center",
+                                  color: "#1976d2",
+                                  fontWeight: "bold",
+                                  marginTop: "16px",
+                                }}
                               >
-                                {alt}
-                              </TableCell>
-                            ))}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {matrices[criterion]?.map((row, rowIndex) => {
-                            return (
-                              <>
-                                <TableRow key={rowIndex}>
-                                  <TableCell
-                                    sx={{
-                                      fontWeight: "bold",
-                                      color: "#1976d2",
-                                    }}
-                                  >
-                                    {alternatives[rowIndex]}
-                                  </TableCell>
-                                  {row.map((cellValue, colIndex) => (
+                                {sub}
+                              </h3>
+                              <Table>
+                                <TableHead>
+                                  <TableRow sx={{ backgroundColor: "#e3f2fd" }}>
                                     <TableCell
-                                      key={colIndex}
                                       sx={{
-                                        color: "#424242",
-                                        cursor:
-                                          rowIndex !== colIndex
-                                            ? "pointer"
-                                            : "default",
-                                        backgroundColor:
-                                          rowIndex === colIndex
-                                            ? "#e3f2fd"
-                                            : "white",
-                                        textAlign: "center",
+                                        fontWeight: "bold",
+                                        color: "#1976d2",
                                       }}
-                                      onClick={() =>
-                                        handleCellClick(
-                                          criterion,
-                                          rowIndex,
-                                          colIndex
-                                        )
-                                      }
-                                    >
-                                      {rowIndex === colIndex ? (
-                                        "1"
-                                      ) : (
-                                        <MathJax.Context>
-                                          <MathJax.Node>
-                                            {Number.isInteger(cellValue)
-                                              ? cellValue
-                                              : `\\frac{1}{${(
-                                                  1 / cellValue
-                                                ).toFixed(0)}}`}
-                                          </MathJax.Node>
-                                        </MathJax.Context>
-                                      )}
-                                    </TableCell>
-                                  ))}
-                                </TableRow>
-                              </>
-                            );
-                          })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </div>
-                </>
-              );
+                                    ></TableCell>
+                                    {alternatives.map((alt, altIndex) => (
+                                      <TableCell
+                                        key={altIndex}
+                                        sx={{
+                                          fontWeight: "bold",
+                                          color: "#1976d2",
+                                        }}
+                                      >
+                                        {alt}
+                                      </TableCell>
+                                    ))}
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {matrices[sub]?.map((row, rowIndex) => {
+                                    return (
+                                      <>
+                                        <TableRow key={rowIndex}>
+                                          <TableCell
+                                            sx={{
+                                              fontWeight: "bold",
+                                              color: "#1976d2",
+                                            }}
+                                          >
+                                            {alternatives[rowIndex]}
+                                          </TableCell>
+                                          {row.map((cellValue, colIndex) => (
+                                            <TableCell
+                                              key={colIndex}
+                                              sx={{
+                                                color: "#424242",
+                                                cursor:
+                                                  rowIndex !== colIndex
+                                                    ? "pointer"
+                                                    : "default",
+                                                backgroundColor:
+                                                  rowIndex === colIndex
+                                                    ? "#e3f2fd"
+                                                    : "white",
+                                                textAlign: "center",
+                                              }}
+                                              onClick={() =>
+                                                handleCellClick(
+                                                  sub,
+                                                  rowIndex,
+                                                  colIndex
+                                                )
+                                              }
+                                            >
+                                              {rowIndex === colIndex ? (
+                                                "1"
+                                              ) : (
+                                                <MathJax.Context>
+                                                  <MathJax.Node>
+                                                    {Number.isInteger(cellValue)
+                                                      ? cellValue
+                                                      : `\\frac{1}{${(
+                                                          1 / cellValue
+                                                        ).toFixed(0)}}`}
+                                                  </MathJax.Node>
+                                                </MathJax.Context>
+                                              )}
+                                            </TableCell>
+                                          ))}
+                                        </TableRow>
+                                      </>
+                                    );
+                                  })}
+                                </TableBody>
+                              </Table>
+                            </TableContainer>
+                          </div>
+                        </>
+                      );
+                    })}
+                  </>
+                );
+              }
             }
           })}
         </Box>
@@ -342,4 +359,4 @@ function AlternativeMatrix() {
   );
 }
 
-export default AlternativeMatrix;
+export default SubCriteriaAlternative;

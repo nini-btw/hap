@@ -19,31 +19,34 @@ import AlternativeMatrix from "./Steps/AlternativeMatrix";
 import AlternativeResult from "./Steps/AlternativeResult";
 import SubCriteria from "./Steps/SubCriteria";
 import SubCriteriaResult from "./Steps/SubCriteriaResult";
+import SubCriteriaAlternative from "./Steps/SubCriteriaAlternative";
 
 // Import your custom SASS styles
 import "../style/calc.sass";
 
 const steps = [
-  { key: "criteria", label: "Set Criteria" },
-  { key: "subCriteria", label: "Sub Criteria" },
-  { key: "subCriteriaResult", label: "Sub Criteria Result" },
   { key: "goal", label: "Define Goal" },
+  { key: "criteria", label: "Set Criteria" },
   { key: "criteriaMatrix", label: "Criteria Pairwise" },
   { key: "criteriaResult", label: "Criteria Result" },
-  { key: "alternative", label: "Add Alternatives" },
+  { key: "subCriteria", label: "Sub Criteria" },
+  { key: "subCriteriaResult", label: "Sub Criteria Result" },
+  { key: "alternative", label: "Set Alternatives" },
   { key: "alternativeMatrix", label: "Alternative Pairwise" },
+  { key: "subCriteriaAlternative", label: "Sub Criteria Alternative Pairwise" },
   { key: "alternativeResult", label: "Alternative Result" },
 ];
 
 const stepComponents = [
-  <Criteria key="criteria" />,
-  <SubCriteria key="SubCriteria" />,
-  <SubCriteriaResult key="Sub Criteria Result" />,
   <Goal key="goal" />,
+  <Criteria key="criteria" />,
   <CriteriaMatrix key="criteriaMatrix" />,
   <CriteriaResult key="criteriaResult" />,
+  <SubCriteria key="SubCriteria" />,
+  <SubCriteriaResult key="Sub Criteria Result" />,
   <Alternative key="alternative" />,
   <AlternativeMatrix key="alternativeMatrix" />,
+  <SubCriteriaAlternative key="subCriteriaAlternative" />,
   <AlternativeResult key="alternativeResult" />,
 ];
 
@@ -84,7 +87,8 @@ export default function ProgressBar() {
           padding: isSmallScreen ? "10px 0" : "16px 0",
         }}
       >
-        <Button
+        {/* <Button
+          id="homeBtn"
           component={Link}
           to="/"
           variant="contained"
@@ -96,7 +100,7 @@ export default function ProgressBar() {
           }}
         >
           <HomeIcon />
-        </Button>
+        </Button> */}
 
         {/* Render Stepper or Progress Bar based on screen size */}
         {isSmallScreen ? (
