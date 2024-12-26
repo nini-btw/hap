@@ -109,7 +109,7 @@ function CriteriaMatrix() {
             gap: "2rem",
             display: "flex",
             width: "100%",
-            flexDirection: isSmallScreen ? "column-reverse" : "row",
+            flexDirection: isSmallScreen ? "column-reverse" : "row-reverse",
           }}
         >
           {/* Table Container - takes 3/4 of the width */}
@@ -119,7 +119,7 @@ function CriteriaMatrix() {
               backgroundColor: "#f3f6f9",
               border: "1px solid #e0e0e0",
               boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
-              flexBasis: isSmallScreen ? "100%" : "75%", // Takes 3/4 of the width
+              flexBasis: isSmallScreen ? "100%" : "80%", // Takes 3/4 of the width
               marginRight: "16px", // Adds space between the table and instructions
               height: "100%",
             }}
@@ -183,7 +183,7 @@ function CriteriaMatrix() {
               color: "white", // White text color for contrast
               borderRadius: "8px",
               padding: "16px",
-              flexBasis: isSmallScreen ? "100%" : "25%",
+              flexBasis: isSmallScreen ? "100%" : "20%",
               boxShadow: "0px 3px 6px rgba(0,0,0,0.1)",
               textAlign: "left",
             }}

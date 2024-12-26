@@ -27,7 +27,10 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { useDispatch, useSelector } from "react-redux";
 import { save } from "../../rtk/slice/valueSlice";
 /* import { saveSubCriteria } from "../../rtk/slice/subCriteriaSlice"; */
-import { setStepValid } from "../../rtk/slice/stepValidationSlice";
+import {
+  setStepValid,
+  setStepSkippable,
+} from "../../rtk/slice/stepValidationSlice";
 
 function Criteria() {
   const [rows, setRows] = useState([]); // Local state for rows
@@ -50,6 +53,31 @@ function Criteria() {
     }
   }, [storedCriteria]);
 
+  useEffect(() => {
+    const isSubCriteriaEmpty = Object.keys(subCriteria).length === 0;
+
+    // Save criteria and sub-criteria to Redux
+    dispatch(save({ criteria: rows }));
+    dispatch(save({ subCriteria }));
+
+    // Set step validity
+    dispatch(
+      setStepSkippable({ step: "subCriteria", skippable: isSubCriteriaEmpty })
+    );
+    dispatch(
+      setStepSkippable({
+        step: "subCriteriaAlternative",
+        skippable: isSubCriteriaEmpty,
+      })
+    ); // SubCriteria step becomes skippable if empty
+    dispatch(
+      setStepSkippable({
+        step: "subCriteriaResult",
+        skippable: isSubCriteriaEmpty,
+      })
+    ); // SubCriteria step becomes skippable if empty
+  }, [rows, subCriteria, dispatch]);
+
   // Update Redux state whenever rows or sub-criteria change
   useEffect(() => {
     dispatch(save({ criteria: rows }));
@@ -59,19 +87,28 @@ function Criteria() {
 
   const handleAddRow = () => {
     if (newCriteria.trim()) {
-      if (editIndex !== null) {
-        // Update existing row
-        const updatedRows = rows.map((row, index) =>
-          index === editIndex ? newCriteria : row
-        );
-        setRows(updatedRows);
-        setEditIndex(null);
+      // Check if the criterion already exists (case-insensitive)
+      const isDuplicate = rows.some(
+        (row) => row.toLowerCase() === newCriteria.toLowerCase()
+      );
+
+      if (isDuplicate) {
+        alert("This criterion already exists!");
       } else {
-        // Add new row
-        setRows([...rows, newCriteria]);
+        if (editIndex !== null) {
+          // Update existing row
+          const updatedRows = rows.map((row, index) =>
+            index === editIndex ? newCriteria : row
+          );
+          setRows(updatedRows);
+          setEditIndex(null);
+        } else {
+          // Add new row
+          setRows([...rows, newCriteria]);
+        }
+        setNewCriteria("");
+        inputRef.current.focus(); // Refocus input
       }
-      setNewCriteria("");
-      inputRef.current.focus(); // Refocus input
     }
   };
 

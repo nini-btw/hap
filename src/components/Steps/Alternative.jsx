@@ -42,22 +42,34 @@ function Alternative() {
       const tableContainer = document.querySelector("#table-container");
       const scrollPosition = tableContainer.scrollTop;
 
-      if (editIndex !== null) {
-        const updatedRows = rows.map((row, index) =>
-          index === editIndex ? newAlternative : row
-        );
-        setRows(updatedRows);
-        setEditIndex(null);
-      } else {
-        setRows([...rows, newAlternative]);
-      }
-      setNewAlternative("");
-      setTimeout(() => {
-        tableContainer.scrollTop = scrollPosition;
-      }, 0);
+      // Check if the newAlternative already exists (case-insensitive)
+      const isDuplicate = rows.some(
+        (row) => row.toLowerCase() === newAlternative.toLowerCase()
+      );
 
-      // Refocus on the input field after adding an item
-      inputRef.current.focus();
+      if (isDuplicate) {
+        alert("This alternative already exists!");
+      } else {
+        if (editIndex !== null) {
+          // Update existing row
+          const updatedRows = rows.map((row, index) =>
+            index === editIndex ? newAlternative : row
+          );
+          setRows(updatedRows);
+          setEditIndex(null);
+        } else {
+          // Add new row
+          setRows([...rows, newAlternative]);
+        }
+
+        setNewAlternative("");
+        setTimeout(() => {
+          tableContainer.scrollTop = scrollPosition;
+        }, 0);
+
+        // Refocus on the input field after adding an item
+        inputRef.current.focus();
+      }
     }
   };
 

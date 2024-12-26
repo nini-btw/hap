@@ -68,9 +68,14 @@ export const subCriteriaSlice = createSlice({
       state.weights = w;
       state.normalizedMatrix = normalized;
     },
+    reset: () => ({
+      matrices: {}, // Original matrices
+      normalizedMatrix: {}, // Normalized matrices
+      weights: {}, // Weight vectors
+    }),
   },
 });
 
-export const { saveSubCriteriaMatrices, calculateNormalizedMatrices } =
+export const { saveSubCriteriaMatrices, calculateNormalizedMatrices, reset } =
   subCriteriaSlice.actions;
 export default subCriteriaSlice.reducer;

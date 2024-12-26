@@ -26,7 +26,6 @@ import {
   calculateNormalizedMatrices,
 } from "../../rtk/slice/subCriteriaSlice";
 import MathJax from "react-mathjax2";
-
 function SubCriteria() {
   //Redux
   const subCriteria = useSelector((state) => state.value.subCriteria);
@@ -214,8 +213,16 @@ function SubCriteria() {
         <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
           <DialogTitle>
             How much do you prefer{" "}
-            <strong>{subCriteria[currentCell.row]}</strong> compared to{" "}
-            <strong>{subCriteria[currentCell.col]}</strong>?
+            <strong>
+              {currentCriterion &&
+                subCriteria[currentCriterion][currentCell.row]}
+            </strong>{" "}
+            compared to{" "}
+            <strong>
+              {currentCriterion &&
+                subCriteria[currentCriterion][currentCell.col]}
+            </strong>
+            ?
           </DialogTitle>
           <DialogContent sx={{ minWidth: 200, minHeight: 150 }}>
             <FormControl fullWidth>

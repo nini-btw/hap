@@ -44,6 +44,7 @@ function SubCriteriaAlternative() {
   const [currentCell, setCurrentCell] = useState({ row: null, col: null });
   const [currentCriterion, setCurrentCriterion] = useState(null);
   const [newValue, setNewValue] = useState(1);
+  const [isCalculationComplete, setIsCalculationComplete] = useState(false);
 
   useEffect(() => {
     if (alternatives.length >= 2 && criteria.length > 0) {
@@ -84,7 +85,6 @@ function SubCriteriaAlternative() {
   };
 
   const handleSaveMatrices = () => {
-    console.log(matrices);
     Object.keys(matrices).forEach((criterion) => {
       dispatch(
         saveMatrix({
@@ -97,7 +97,19 @@ function SubCriteriaAlternative() {
     dispatch(calculateNormalizedMatrices());
     dispatch(calculateAlternativeWeights());
     dispatch(calculateOverallPriorities(criteriaWeights));
+
+    // Mark calculations as complete
+    setIsCalculationComplete(true);
   };
+
+  // Trigger handleR once calculations are complete
+  useEffect(() => {
+    if (isCalculationComplete) {
+      handleR();
+      // Reset the state to prevent multiple triggers
+      setIsCalculationComplete(false);
+    }
+  }, [isCalculationComplete]);
 
   const handleBlur = () => {
     if (newValue) {
@@ -155,7 +167,7 @@ function SubCriteriaAlternative() {
           marginTop: "1rem !important",
         }}
       >
-        Alternative Pairwise
+        Alternative Pairwise For Sub Criteria
       </Typography>
 
       {alternatives.length < 2 ? (
@@ -397,7 +409,7 @@ function SubCriteriaAlternative() {
           Save All Matrices
         </Button>
       </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+      {/* <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button
           variant="contained"
           color="secondary"
@@ -406,7 +418,7 @@ function SubCriteriaAlternative() {
         >
           Save All Matrices
         </Button>
-      </Box>
+      </Box> */}
     </section>
   );
 }

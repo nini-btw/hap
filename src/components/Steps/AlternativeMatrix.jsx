@@ -27,6 +27,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import MathJax from "react-mathjax2";
+import { setStepValid } from "../../rtk/slice/stepValidationSlice";
 
 function AlternativeMatrix() {
   const criteriaWeights = useSelector((state) => state.criteria.weights);
@@ -86,6 +87,7 @@ function AlternativeMatrix() {
         })
       );
     });
+    dispatch(setStepValid({ step: "alternativeMatrix", valid: true }));
     dispatch(calculateNormalizedMatrices());
     dispatch(calculateAlternativeWeights());
     dispatch(calculateOverallPriorities(criteriaWeights));

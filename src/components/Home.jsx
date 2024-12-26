@@ -24,7 +24,7 @@ function Home() {
   return (
     <Container fluid>
       <Row>
-        <Col xs={12} md={12}>
+        <Col xs={12} md={12} className="p-0">
           <div className="bar text-black" style={{}}>
             <ThemeProvider theme={lightTheme}>
               <ProgressBar />

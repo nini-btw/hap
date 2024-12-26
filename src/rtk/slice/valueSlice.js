@@ -16,8 +16,14 @@ export const valueSlice = createSlice({
         ...action.payload,
       };
     },
+    reset: () => ({
+      goal: "",
+      criteria: [],
+      alternatives: [],
+      subCriteria: {},
+    }), // Reset to initial state
   },
 });
 
-export const { save } = valueSlice.actions;
+export const { save, reset } = valueSlice.actions;
 export default valueSlice.reducer;

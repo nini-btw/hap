@@ -48,9 +48,15 @@ export const matrixSlice = createSlice({
       const ri = riTable[n - 1] || 0; // Handle cases where RI is undefined
       state.consistencyRatio = ri ? ci / ri : 0;
     },
+    reset: () => ({
+      matrix: [],
+      normalizedMatrix: [],
+      weights: [],
+      consistencyRatio: null,
+    }), // Reset to initial state
   },
 });
 
-export const { saveMatrix, calculateWeights } = matrixSlice.actions;
+export const { saveMatrix, calculateWeights, reset } = matrixSlice.actions;
 
 export default matrixSlice.reducer;

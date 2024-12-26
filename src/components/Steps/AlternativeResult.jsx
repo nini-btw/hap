@@ -9,6 +9,8 @@ import {
   TableRow,
   Typography,
   Paper,
+  Card,
+  CardContent,
 } from "@mui/material";
 import SaveDataButton from "./SaveDataButton";
 
@@ -17,7 +19,7 @@ const AlternativeResult = () => {
   const w = useSelector((state) => state.alternatives.weights);
   const n = useSelector((state) => state.alternatives.normalizedMatrices);
   const a = useSelector((state) => state.alternatives.bestAlternative);
-
+  const g = useSelector((state) => state.value.goal);
   const criteria = useSelector((state) => state.value.criteria); // Array of criterion names
   const alternatives = useSelector((state) => state.value.alternatives); // Array of alternative names
   console.log(a, n, w, p);
@@ -37,21 +39,47 @@ const AlternativeResult = () => {
         <Typography variant="h4" sx={{ mb: 4, textAlign: "center" }}>
           Alternative Results
         </Typography>
+
+        {/* Display Goal */}
+        <Card
+          sx={{
+            mb: 4,
+            padding: "10px",
+            backgroundColor: "#19AFD1",
+            textAlign: "center",
+          }}
+        >
+          <CardContent>
+            <Typography variant="h5" color="fff">
+              Goal:
+            </Typography>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: "bold", color: "white" }}
+            >
+              {g || "No goal has been set"}
+            </Typography>
+          </CardContent>
+        </Card>
+
         {/* Display Best Alternative */}
         <Box
           sx={{
             padding: "10px",
-            backgroundColor: "#5BFF1C",
+            backgroundColor: "#19D1B7",
             textAlign: "center",
             borderRadius: "4px",
+            mb: 4,
           }}
         >
-          <Typography variant="h5">
-            {a !== undefined
-              ? `Best Alternative: ${alternatives[a]}`
-              : "No best alternative determined yet"}
+          <Typography variant="h5" color="fff">
+            Best Alternative
+          </Typography>
+          <Typography variant="h6" sx={{ fontWeight: "bold", color: "white" }}>
+            {alternatives[a] || "No goal has been set"}
           </Typography>
         </Box>
+
         {/* Display Overall Priorities */}
         <Box sx={{ mb: 4 }}>
           <Typography variant="h6" sx={{ mb: 2 }}>
@@ -105,44 +133,6 @@ const AlternativeResult = () => {
                           </TableCell>
                         ))}
                       </TableRow>
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Box>
-            ))}
-          </Box>
-        )}
-
-        {/* Display Normalized Matrices */}
-        {Object.keys(n).length > 0 && (
-          <Box sx={{ mb: 4 }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>
-              Normalized Matrices
-            </Typography>
-            {criteria.map((criterion, idx) => (
-              <Box key={idx} sx={{ mb: 2 }}>
-                <Typography variant="subtitle1" sx={{ mb: 1 }}>
-                  {criterion}
-                </Typography>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        {alternatives.map((alt, colIndex) => (
-                          <TableCell key={colIndex}>{alt}</TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {n[criterion]?.map((row, rowIndex) => (
-                        <TableRow key={rowIndex}>
-                          {row.map((value, colIndex) => (
-                            <TableCell key={colIndex}>
-                              {value.toFixed(3)}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
                     </TableBody>
                   </Table>
                 </TableContainer>

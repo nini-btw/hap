@@ -1,13 +1,14 @@
-import * as React from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import { useSelector } from "react-redux"; // For accessing Redux state
-import { Link } from "react-router-dom"; // For navigation
-import HomeIcon from "@mui/icons-material/Home"; // Home icon for the button
-import { useMediaQuery } from "@mui/material"; // For responsive screen size handling
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import HomeIcon from "@mui/icons-material/Home";
+import { useMediaQuery } from "@mui/material";
+import { resetAll } from "../rtk/store";
 
 // Your custom step components
 import Goal from "./Steps/Goal";
@@ -20,59 +21,84 @@ import AlternativeResult from "./Steps/AlternativeResult";
 import SubCriteria from "./Steps/SubCriteria";
 import SubCriteriaResult from "./Steps/SubCriteriaResult";
 import SubCriteriaAlternative from "./Steps/SubCriteriaAlternative";
+import { useDispatch } from "react-redux";
 
 // Import your custom SASS styles
 import "../style/calc.sass";
 
-const steps = [
-  { key: "goal", label: "Define Goal" },
-  { key: "criteria", label: "Set Criteria" },
-  { key: "criteriaMatrix", label: "Criteria Pairwise" },
-  { key: "criteriaResult", label: "Criteria Result" },
-  { key: "subCriteria", label: "Sub Criteria" },
-  { key: "subCriteriaResult", label: "Sub Criteria Result" },
-  { key: "alternative", label: "Set Alternatives" },
-  { key: "alternativeMatrix", label: "Alternative Pairwise" },
-  { key: "subCriteriaAlternative", label: "Sub Criteria Alternative Pairwise" },
-  { key: "alternativeResult", label: "Alternative Result" },
-];
-
-const stepComponents = [
-  <Goal key="goal" />,
-  <Criteria key="criteria" />,
-  <CriteriaMatrix key="criteriaMatrix" />,
-  <CriteriaResult key="criteriaResult" />,
-  <SubCriteria key="SubCriteria" />,
-  <SubCriteriaResult key="Sub Criteria Result" />,
-  <Alternative key="alternative" />,
-  <AlternativeMatrix key="alternativeMatrix" />,
-  <SubCriteriaAlternative key="subCriteriaAlternative" />,
-  <AlternativeResult key="alternativeResult" />,
-];
-
 export default function ProgressBar() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const stepValidation = useSelector((state) => state.stepValidation);
+  const dispatch = useDispatch();
+  const [activeStep, setActiveStep] = useState(0);
+  const steps = useSelector((state) => state.stepValidation.steps);
+  const isSmallScreen = useMediaQuery("(max-width:960px)");
 
-  const isSmallScreen = useMediaQuery("(max-width:960px)"); // Check screen size
+  const stepKeys = Object.keys(steps);
+  const isLastStep = activeStep === stepKeys.length - 1;
+  const currentStep = steps[stepKeys[activeStep]];
+  const isStepValid = currentStep.valid;
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => {
+      let nextStep = prevActiveStep + 1;
+      while (
+        nextStep < stepKeys.length &&
+        steps[stepKeys[nextStep]].skippable
+      ) {
+        nextStep++;
+      }
+      return nextStep;
+    });
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep) => {
+      let prevStep = prevActiveStep - 1;
+      while (prevStep >= 0 && steps[stepKeys[prevStep]].skippable) {
+        prevStep--;
+      }
+      return prevStep;
+    });
   };
 
   const handleReset = () => {
+    dispatch(resetAll());
     setActiveStep(0);
   };
 
-  const isStepValid = stepValidation[steps[activeStep].key];
-  const isLastStep = activeStep === steps.length - 1;
+  const stepComponents = {
+    goal: <Goal />,
+    criteria: <Criteria />,
+    criteriaMatrix: <CriteriaMatrix />,
+    criteriaResult: <CriteriaResult />,
+    subCriteria: <SubCriteria />,
+    subCriteriaResult: <SubCriteriaResult />,
+    alternative: <Alternative />,
+    subCriteriaAlternative: <SubCriteriaAlternative />,
+    alternativeMatrix: <AlternativeMatrix />,
+    alternativeResult: <AlternativeResult />,
+  };
 
   return (
-    <Box sx={{ display: "flex", width: "100%" }} className="mainBox">
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        flexDirection: isSmallScreen ? "column-reverse" : "",
+      }}
+      className="mainBox"
+    >
+      <Box
+        className="matrixes"
+        sx={{
+          flexGrow: 1,
+          padding: 0,
+          height: isSmallScreen ? "90vh" : "100%",
+          overflow: isSmallScreen ? "auto" : "unset",
+        }}
+      >
+        <Box sx={{ margin: 0 }}>{stepComponents[stepKeys[activeStep]]}</Box>
+      </Box>
+
       <Box
         className="barBox"
         sx={{
@@ -87,22 +113,40 @@ export default function ProgressBar() {
           padding: isSmallScreen ? "10px 0" : "16px 0",
         }}
       >
-        {/* <Button
+        <Button
           id="homeBtn"
           component={Link}
           to="/"
+          onClick={handleReset}
           variant="contained"
           sx={{
-            scale: isSmallScreen ? "100%" : "150%",
+            clipPath: isSmallScreen
+              ? "none"
+              : "polygon(100% 0, 100% 100%, 0 0)", // Apply triangle shape only for larger screens
             zIndex: "2",
             boxShadow: 0,
             marginRight: isSmallScreen ? "1rem" : "0",
+            marginLeft: isSmallScreen ? "1rem" : "0",
+            width: isSmallScreen ? "5rem" : "7rem", // Adjust size based on screen
+            height: isSmallScreen ? "3rem" : "7rem", // Ensure square base for triangle
+            marginBottom: !isSmallScreen ? "1rem" : "",
+            position: !isSmallScreen ? "absolute" : "",
+            top: !isSmallScreen ? "0rem" : "",
+            right: !isSmallScreen ? "0rem" : "",
+            backgroundColor: "primary.main",
+            borderRadius: isSmallScreen ? ".5rem" : "0",
           }}
         >
-          <HomeIcon />
-        </Button> */}
+          <HomeIcon
+            sx={{
+              scale: "130%",
+              position: !isSmallScreen ? "absolute" : "",
+              top: !isSmallScreen ? "22px" : "",
+              right: !isSmallScreen ? "22px" : "",
+            }}
+          />
+        </Button>
 
-        {/* Render Stepper or Progress Bar based on screen size */}
         {isSmallScreen ? (
           <Box
             className="progressBar"
@@ -116,7 +160,7 @@ export default function ProgressBar() {
           >
             <Box
               sx={{
-                width: `${((activeStep + 1) / steps.length) * 100}%`,
+                width: `${((activeStep + 1) / stepKeys.length) * 100}%`,
                 height: "100%",
                 backgroundColor: "#1976d2",
                 borderRadius: "5px",
@@ -130,9 +174,11 @@ export default function ProgressBar() {
             orientation="vertical"
             className="stepper"
           >
-            {steps.map((step) => (
-              <Step key={step.key}>
-                <StepLabel>{step.label}</StepLabel>
+            {stepKeys.map((key) => (
+              <Step key={key}>
+                <StepLabel sx={{ width: "11rem" }}>
+                  {steps[key].label}
+                </StepLabel>
               </Step>
             ))}
           </Stepper>
@@ -143,7 +189,7 @@ export default function ProgressBar() {
           sx={{
             display: "flex",
             flexDirection: "row",
-            pt: isSmallScreen ? 0 : 2,
+            pt: isSmallScreen ? 0 : 1,
             width: "10rem",
           }}
         >
@@ -164,18 +210,6 @@ export default function ProgressBar() {
             </Button>
           )}
         </Box>
-      </Box>
-
-      <Box
-        className="matrixes"
-        sx={{
-          flexGrow: 1,
-          padding: 0,
-          height: isSmallScreen ? "90vh" : "100%",
-          overflow: isSmallScreen ? "auto" : "unset",
-        }}
-      >
-        <Box sx={{ margin: 0 }}>{stepComponents[activeStep]}</Box>
       </Box>
     </Box>
   );

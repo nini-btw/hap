@@ -83,6 +83,13 @@ export const alternativeMatrixSlice = createSlice({
         [action.payload.key]: action.payload.data,
       };
     },
+    reset: () => ({
+      matrices: {}, // Stores pairwise matrices for each criterion
+      weights: {}, // Stores normalized weights for each criterion's alternatives
+      normalizedMatrices: {}, // Stores the normalized matrix for each criterion
+      overallPriorities: [], // Overall priorities for alternatives
+      bestAlternative: null, // The best alternative based on overall priorities
+    }), // Reset to initial state
   },
 });
 
@@ -92,6 +99,7 @@ export const {
   calculateAlternativeWeights,
   calculateOverallPriorities,
   addW,
+  reset,
 } = alternativeMatrixSlice.actions;
 
 export default alternativeMatrixSlice.reducer;

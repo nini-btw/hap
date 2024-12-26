@@ -77,6 +77,13 @@ export const subAlternativeSlice = createSlice({
         (priority) => priority === maxPriority
       );
     },
+    reset: () => ({
+      matrices: {}, // Stores pairwise matrices for each criterion
+      weights: {}, // Stores normalized weights for each criterion's alternatives
+      normalizedMatrices: {}, // Stores the normalized matrix for each criterion
+      overallPriorities: [], // Overall priorities for alternatives
+      bestAlternative: null, // The best alternative based on overall priorities
+    }),
   },
 });
 
@@ -85,6 +92,7 @@ export const {
   calculateNormalizedMatrices,
   calculateAlternativeWeights,
   calculateOverallPriorities,
+  reset,
 } = subAlternativeSlice.actions;
 
 export default subAlternativeSlice.reducer;
