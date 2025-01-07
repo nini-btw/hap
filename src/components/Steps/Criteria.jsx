@@ -182,7 +182,7 @@ function Criteria() {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: "40px",
+              width: "fit-content",
               height: "40px",
               borderRadius: "8px", // Make it a square with rounded corners
               backgroundColor: "#7096bd",
